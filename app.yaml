@@ -1,0 +1,44 @@
+application: hce-bee
+version: alpha
+runtime: python
+api_version: 1
+
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?index\.yaml
+- ^(.*/)?index\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^(.*/)?_darcs/.*
+
+inbound_services:
+- mail
+- xmpp_message
+
+handlers:
+# Email
+- url: /_ah/mail/.*
+  script: mail.py
+  login: admin
+
+# XMPP
+- url: /_ah/xmpp/message/chat/
+  script: xmpp.py
+  login: admin
+
+# GWave
+- url: /_wave/.*
+  script: wave.py
+
+# Static Files
+- url: /static
+  static_dir: static
+
+- url: /favicon\.ico|/static/favicon\.ico
+  static_files: favicon.ico
+  upload: favicon.ico
+  mime_type: image/vnd.microsoft.icon

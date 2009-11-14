@@ -1,0 +1,59 @@
+This is a simple TODO list for the HCE Bee's "language", and should
+serve as a useful collection of examples.
+
+Setup
+=====
+
+IM Only Commands: 
+  Because IM conversations do not have IDs/subject lines that can be used
+  to determine the game in progress... The restriction will likely be that
+  only one game can be active at any time for a storyteller.
+
+  [This is called <Game Name>.]
+  [This continues <Game Name>.]
+  [This ends <Game Name>.]
+
+* Chaining these in useful ways will be important.
+
+[<id> is playing (as <Char Name>) with X will and Y ego.]
+[I am...]
+
+[He/She/It/<Char Name> has X <Element> (strength).]
+[I have...]
+
+[She has advanced X (points/tokens) in profession Y.]
+[She has advanced X (points/tokens) in her third profession.]
+[I have...]
+
+[<id> is playing as <Char Name> with X ego, Y life strength, Z water,
+and A will. It has advanced X in profession 1, Y in its second 
+profession, and Z in profession 3.]
+
+Game Flow
+=========
+
+* Ticks should be automatically announced.
+
+[(I) flow/exert X to <influence>.]
+[(I) (hero(ically)) challenge/contest <Char Name> with/in <influence>.
+(under <profession>).]
+
+Uncontested version:
+
+[(I) (hero(ically)) act(ion) with/in <influence> (under <profession>).]
+
+[(I) (re)set (<Char Name>/myself) (to <time>).]
+[(I) lose X (ego).]
+
+Hex Map
+=======
+[(I) am at X, Y.] Set-Up/Teleport
+
+[(I) move (<Char Name>/myself) <direction> X (spots/spaces).]
+
+Renown
+======
+
+[<Char Name> deserves X for <influence>.]
+[(I) assent/aye.]
+[(I) dissent/nay.]
