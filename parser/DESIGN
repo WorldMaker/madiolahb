@@ -15,14 +15,16 @@ IM Only Commands:
 
 * Chaining these in useful ways will be important.
 
-[<id> is playing (as <Char Name>) with X will and Y ego.]
-[I am...]
+[<id> is playing name.]
+
+[He has X will and Y ego.]
+[I have...]
 
 [He/She/It/<Char Name> has X <Element> (strength).]
 [I have...]
 
-[She has advanced X (points/tokens) in profession Y.]
-[She has advanced X (points/tokens) in her third profession.]
+[She advanced (to) X (points/tokens) in profession Y.]
+[She advanced X (points/tokens) in her third profession.]
 [I have...]
 
 [<id> is playing as <Char Name> with X ego, Y life strength, Z water,
@@ -54,7 +56,7 @@ Hex Map
 Renown
 ======
 
-[<Char Name> deserves X for <influence>.]
+[(I) nominates <char> for X <influence> (renown).]
 [(I) assent/aye.]
 [(I) dissent/nay.]
 
