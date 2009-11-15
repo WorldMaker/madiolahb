@@ -57,3 +57,8 @@ Renown
 [<Char Name> deserves X for <influence>.]
 [(I) assent/aye.]
 [(I) dissent/nay.]
+
+Chown
+=====
+
+[I yield (<Char Name>) to <id>.]
