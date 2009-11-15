@@ -37,4 +37,23 @@ class Character(db.Model):
     x = db.IntegerProperty(default=0)
     y = db.IntegerProperty(default=0)
 
+class GameMixin(object):
+    def new_char(self, owner, ego, will):
+        return Character(parent=self,
+            owner=owner,
+            ego=ego,
+            will=will,
+        )
+
+class WaveGame(db.Model, GameMixin):
+    waveid = db.StringProperty(required=True)
+
+class EmailGame(db.Model, GameMixin):
+    players = db.StringListProperty() # Hmm...
+    subject = db.StringProperty(required=True)
+
+class XmppGame(db.Model, GameMixin):
+    players = db.StringListProperty() # Hmm...
+    name = db.StringProperty(required=True)
+
 # vim: ai ts=4 sts=4 et sw=4
