@@ -8,6 +8,9 @@ class Character(db.Model):
     # Source
     ego = db.IntegerProperty(required=True)
     will = db.IntegerProperty(required=True)
+    # "Drained" Spots
+    ego_spot = db.IntegerProperty(default=0)
+    will_spot = db.IntegerProperty(default=0)
     # Elements of Ego
     life = db.IntegerProperty(default=0)
     earth = db.IntegerProperty(default=0)

@@ -59,7 +59,7 @@ def profpt():       return num, Optional(['points', 'tokens']), 'in', \
 def advanced():     return 'advanced', Optional('to'), num, \
                         OneOrMore((profpt, andcomma))
 
-def stat():         return num, ['ego', 'will',
+def stat():         return num, ['ego', 'will', ('drained', ['ego', 'will']),
                         (element, Optional('strength'))]
 def has():          return ['have', 'has'], OneOrMore((stat, andcomma))
 
