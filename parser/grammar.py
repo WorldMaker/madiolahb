@@ -28,9 +28,10 @@ setverb = rem(re.compile('(re)?set'))
 reknownverb = rem(re.compile('nominates?|props,?'))
 voteverb = rem(re.compile('assents?|aye|dissents?|nay'))
 chownverb = rem(re.compile('yields?'))
+timingverb = rem(re.compile('ready|readies|holds?|interrupts?'))
 reservedverbs = ['is', 'am', 'at', 'to', 'for', 'advanced', 'have', 'has',
     'lose', 'move', flowverb, herorem, contestverb, actverb, setverb,
-    reknownverb, voteverb, chownverb]
+    reknownverb, voteverb, chownverb, timingverb, 'inactive']
 
 def num():          return rem(re.compile(r'\d+'))
 def pronoun():      return pronouns
@@ -90,10 +91,15 @@ def vote():         return voteverb
 
 def chown():        return chownverb, 'to', addr
 
+def timing():       return timingverb
+
+def deactivate():   return Optional(['am', 'is']), 'inactive'
+
 ## Final Composition ##
 
 def phrase():       return [playing, advanced, has, flow, contest, act, set,
-                        lose, amat, move, renown, vote, chown]
+                        lose, amat, move, renown, vote, chown, timing,
+                        deactivate]
 
 def asentence():    return Optional(asphrase), Optional(pronoun), phrase
 def sentence():     return [imsentence, asentence], '.'

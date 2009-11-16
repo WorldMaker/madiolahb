@@ -5,6 +5,7 @@ from google.appengine.ext import db
 class Character(db.Model):
     owner = db.StringProperty(required=True)
     name = db.StringProperty()
+    active = db.BooleanProperty(default=True)
     # Source
     ego = db.IntegerProperty(required=True)
     will = db.IntegerProperty(required=True)

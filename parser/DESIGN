@@ -37,6 +37,10 @@ Game Flow
 
 * Ticks should be automatically announced.
 
+[I ready.]
+[I hold.]
+[I interrupt.]
+
 [(I) flow/exert X to <influence>.]
 [(I) (hero(ically)) challenge/contest <Char Name> with/in <influence>.
 (under <profession>).]
@@ -65,3 +69,8 @@ Chown
 =====
 
 [I yield (<Char Name>) to <id>.]
+
+Deactivation
+============
+
+[I am inactive.]
