@@ -45,7 +45,7 @@ def name():         return OneOrMore((Not(reservedverbs),
                         rem(re.compile(r'[^\.\s\,]+'))))
 def id():           return [pronoun, addr, name]
 def refid():        return [refpronoun, addr, name]
-def asphrase():     return ['for', 'as'], [addr, name], ','
+def asphrase():     return [('as', 'for'), 'for', 'as'], [addr, name], ','
 def andcomma():     return Optional([(',', 'and'), ',', 'and'])
 
 ## Verb Phrases ##
