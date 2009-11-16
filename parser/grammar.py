@@ -57,10 +57,10 @@ def profcard():     return pospronoun, ['first', 'second', 'third'], \
                         'profession'
 def profpt():       return num, Optional(['points', 'tokens']), 'in', \
                         [profnum, profcard]
-def advanced():     return 'advanced', Optional('to'), num, \
-                        OneOrMore((profpt, andcomma))
+def advanced():     return Optional(['have', 'has']), 'advanced', \
+                        Optional('to'), OneOrMore((profpt, andcomma))
 
-def stat():         return num, ['ego', 'will', ('drained', ['ego', 'will']),
+def stat():         return num, [(['ego', 'will'], Optional('drained')),
                         (element, Optional('strength'))]
 def has():          return ['have', 'has'], OneOrMore((stat, andcomma))
 
@@ -108,41 +108,56 @@ def command():      return OneOrMore(sentence)
 ## Semantic Actions ##
 
 class Special(object):
-    def __init__(self, type='Special'):
+    def __init__(self, type='Special', value=''):
         self.type = type
+        self.value = value
 
     def __repr__(self):
+        if self.value:
+            return "%s: %s" % (self.type, self.value)
         return self.type
 
-class APronoun(SemanticAction):
-    def first_pass(self, parser, node, nodes):
-        return Special('Pronoun')
+class SpecialSem(SemanticAction):
+    def __init__(self, type, value=False):
+        self.type = type
+        self.value = value
 
-class AHeroic(SemanticAction):
     def first_pass(self, parser, node, nodes):
-        if nodes:
-            return Special('Heroic')
+        if not isinstance(node, NonTerminal) or nodes:
+            return Special(self.type, value=node.value if self.value else '')
+
+pronoun.sem = SpecialSem('Pronoun')
+pospronoun.sem = SpecialSem('Pronoun')
+refpronoun.sem = SpecialSem('Pronoun')
+addr.sem = SpecialSem('Addr', value=True)
+heroic.sem = SpecialSem('Heroic')
 
 class ToInt(SemanticAction):
     def first_pass(self, parser, node, nodes):
         return int(node.value)
 
+num.sem = ToInt()
+
 class NameConcat(SemanticAction):
     def first_pass(self, parser, node, nodes):
         return ' '.join(n.value for n in nodes)
 
-class PopT(SemanticAction):
-    def first_pass(self, parser, node, nodes):
-        return node.value
+name.sem = NameConcat()
 
 class PopNT(SemanticAction):
     def first_pass(self, parser, node, nodes):
         return nodes[0]
 
+id.sem = PopNT()
+refid.sem = PopNT()
+phrase.sem = PopNT()
+
 class AsPhrase(SemanticAction):
     def first_pass(self, parser, node, nodes):
         node.nodes = {'as': nodes[1]}
         return node
+
+asphrase.sem = AsPhrase()
 
 class SetVerb(SemanticAction):
     def first_pass(self, parser, node, nodes):
@@ -155,16 +170,78 @@ class SetVerb(SemanticAction):
                 node.nodes['object'] = nodes[0]
         return node
 
+set.sem = SetVerb()
+
 class VerbOnly(SemanticAction):
     def first_pass(self, parser, node, nodes):
         n = NonTerminal(node.type, node.position, [])
         n.nodes = {'verb': node.value}
         return n
 
-class VerbFoo(SemanticAction):
+vote.sem = VerbOnly()
+timing.sem = VerbOnly()
+
+class Playing(SemanticAction):
     def first_pass(self, parser, node, nodes):
-        node.nodes = {'verb': nodes[-2].value, 'object': nodes[-1]}
+        node.nodes = {'verb': 'playing', 'name': nodes[-1]}
         return node
+
+playing.sem = Playing()
+
+class ProfNum(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        return nodes[-1]
+
+profnum.sem = ProfNum()
+
+class ProfCard(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        if nodes[-2].value == 'first':
+            return 1
+        elif nodes[-2].value == 'second':
+            return 2
+        elif nodes[-2].value == 'third':
+            return 3
+        return 0
+
+profcard.sem = ProfCard()
+
+class ProfPt(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        # Return (prof num, points)
+        return nodes[-1], nodes[0]
+
+profpt.sem = ProfPt()
+
+class Advanced(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        sd = {'verb': 'advanced', 'profs': []}
+        for n in nodes:
+            if isinstance(n, tuple):
+                sd['profs'].append(n)
+        node.nodes = sd
+        return node
+
+advanced.sem = Advanced()
+
+class Stat(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        # Return (stat, points)
+        stat = nodes[-1 if len(nodes) < 3 else -2].value
+        if nodes[-1].value == 'drained':
+            stat += '_spot'
+        return stat, nodes[0]
+
+stat.sem = Stat()
+
+class Has(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        stats = [n for n in nodes if isinstance(n, tuple)]
+        node.nodes = dict(stats)
+        node.nodes['verb'] = 'has'
+        return node
+
+has.sem = Has()
 
 class ASentence(SemanticAction):
     def first_pass(self, parser, node, nodes):
@@ -181,6 +258,8 @@ class ASentence(SemanticAction):
         node.nodes = sd
         return node
 
+asentence.sem = ASentence()
+
 class IMSentence(SemanticAction):
     def first_pass(self, parser, node, nodes):
         node.nodes = {'imsentence': True,
@@ -188,6 +267,8 @@ class IMSentence(SemanticAction):
             'name': nodes[-1].value,
         }
         return node
+
+imsentence.sem = IMSentence()
 
 class CleanSentences(SemanticAction):
     def first_pass(self, parser, node, nodes):
@@ -201,22 +282,6 @@ class CleanSentences(SemanticAction):
             sentences.append(sd)
         return sentences
 
-num.sem = ToInt()
-imsentence.sem = IMSentence()
-id.sem = PopNT()
-refid.sem = PopNT()
-pronoun.sem = APronoun()
-pospronoun.sem = APronoun()
-refpronoun.sem = APronoun()
-asphrase.sem = AsPhrase()
-playing.sem = VerbFoo()
-set.sem = SetVerb()
-name.sem = NameConcat()
-addr.sem = PopT()
-vote.sem = VerbOnly()
-timing.sem = VerbOnly()
-phrase.sem = PopNT()
-asentence.sem = ASentence()
 command.sem = CleanSentences()
 
 # Convenience Function

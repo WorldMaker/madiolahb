@@ -33,13 +33,42 @@ Character Description
 
 Creating a character::
 
-   >>> sen = parse('I am playing the pope.')[0]
-   >>> sen['subject'], sen['verb'], sen['object']
-   (Pronoun, 'playing', 'the pope')
+  >>> sen = parse('I am playing the pope.')[0]
+  >>> sen['subject'], sen['verb'], sen['name']
+  (Pronoun, 'playing', 'the pope')
 
-   >>> sen = parse('rob@gwave.example.com is playing Clown.')[0]
-   >>> sen['subject'], sen['verb'], sen['object']
-   ('rob@gwave.example.com', 'playing', 'clown')
+  >>> sen = parse('rob@gwave.example.com is playing Clown.')[0]
+  >>> sen['subject'], sen['verb'], sen['name']
+  (Addr: rob@gwave.example.com, 'playing', 'clown')
+
+Setting a character's professional advancement::
+
+  >>> sen = parse('I have advanced to 3 in profession 1.')[0]
+  >>> sen['verb'], sen['profs'][0]
+  ('advanced', (1, 3))
+
+  >>> sen = parse('I advanced 3 in my first profession.')[0]
+  >>> sen['verb'], sen['profs'][0]
+  ('advanced', (1, 3))
+
+  >>> sen = parse('I advanced 2 in profession 2, 3 in profession 1, and 1 in my third profession.')[0]
+  >>> profs = dict(sen['profs'])
+  >>> sen['verb'], profs[1], profs[2], profs[3]
+  ('advanced', 3, 2, 1)
+
+Setting a character's spots::
+
+  >>> sen = parse('I have 3 will.')[0]
+  >>> sen['verb'], sen['will']
+  ('has', 3)
+
+  >>> sen = parse('I have 3 will drained.')[0]
+  >>> sen['verb'], sen['will_spot']
+  ('has', 3)
+
+  >>> sen = parse('I have 3 will and 4 ego, 1 will drained and 3 life.')[0]
+  >>> sen['verb'], sen['will'], sen['will_spot'], sen['ego'], sen['life']
+  ('has', 3, 1, 4, 3)
 
 As Phrase
 ---------
@@ -89,3 +118,12 @@ Resetting and otherwise setting the time track::
   >>> sen = parse('Reset myself.')[0]
   >>> print sen['verb'], sen['time'], sen['object']
   set None Pronoun
+
+Errata
+======
+
+Multiple sentences::
+
+  >>> sens = parse('I ready. I hold. I interrupt.')
+  >>> [sen['verb'] for sen in sens]
+  ['ready', 'hold', 'interrupt']
