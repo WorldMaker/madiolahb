@@ -70,9 +70,6 @@ Setting a character's spots::
   >>> sen['verb'], sen['will'], sen['will_spot'], sen['ego'], sen['life']
   ('has', 3, 1, 4, 3)
 
-As Phrase
----------
-
 Game Flow
 ---------
 
@@ -121,6 +118,20 @@ Resetting and otherwise setting the time track::
 
 Errata
 ======
+
+As phrase::
+
+  >>> sen = parse('As Bob Johnson, ready.')[0]
+  >>> sen['as']
+  'bob johnson'
+
+  >>> sen = parse('As for john@example.com, ready.')[0]
+  >>> sen['as']
+  Addr: john@example.com
+
+  >>> sen = parse('For Jason the Awesome Superhero, ready.')[0]
+  >>> sen['as']
+  'jason the awesome superhero'
 
 Multiple sentences::
 

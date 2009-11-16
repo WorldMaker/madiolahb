@@ -154,7 +154,7 @@ phrase.sem = PopNT()
 
 class AsPhrase(SemanticAction):
     def first_pass(self, parser, node, nodes):
-        node.nodes = {'as': nodes[1]}
+        node.nodes = {'as': nodes[-2]}
         return node
 
 asphrase.sem = AsPhrase()
