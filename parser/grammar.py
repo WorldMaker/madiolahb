@@ -133,7 +133,27 @@ class NameConcat(SemanticAction):
 
 class PopNT(SemanticAction):
     def first_pass(self, parser, node, nodes):
-        return nodes
+        return nodes[0]
+
+class AsPhrase(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        node.nodes = {'as': nodes[1]}
+        return node
+
+class ASentence(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        sd = {'nodes': []}
+        for n in nodes:
+            if isinstance(n, NonTerminal):
+                if isinstance(n.nodes, dict):
+                    sd.update(n.nodes)
+                else:
+                    sd['nodes'].append(n.nodes)
+            else:
+                # Whatever is left as a Terminal is our subject
+                sd['subject'] = n
+        node.nodes = sd
+        return node
 
 class IMSentence(SemanticAction):
     def first_pass(self, parser, node, nodes):
@@ -157,11 +177,15 @@ class CleanSentences(SemanticAction):
 
 num.sem = ToInt()
 imsentence.sem = IMSentence()
+id.sem = PopNT()
+refid.sem = PopNT()
 pronoun.sem = APronoun()
 pospronoun.sem = APronoun()
 refpronoun.sem = APronoun()
+asphrase.sem = AsPhrase()
 name.sem = NameConcat()
 phrase.sem = PopNT()
+asentence.sem = ASentence()
 command.sem = CleanSentences()
 
 # For testing...
