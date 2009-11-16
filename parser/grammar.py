@@ -140,9 +140,26 @@ class AsPhrase(SemanticAction):
         node.nodes = {'as': nodes[1]}
         return node
 
+class SetVerb(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        node.nodes = {'verb': 'set', 'time': None, 'subject': None}
+        nodes.pop(0) # pop the verb
+        if len(nodes) > 0:
+            if isinstance(nodes[-1], int):
+                node.nodes['time'] = nodes[-1]
+            if not (isinstance(nodes[0], Terminal) and nodes[0].value == 'to'):
+                node.nodes['subject'] = nodes[0]
+        return node
+
+class VerbOnly(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        n = NonTerminal(node.type, node.position, [])
+        n.nodes = {'verb': node.value}
+        return n
+
 class ASentence(SemanticAction):
     def first_pass(self, parser, node, nodes):
-        sd = {'nodes': []}
+        sd = {'nodes': [], 'subject': None}
         for n in nodes:
             if isinstance(n, NonTerminal):
                 if isinstance(n.nodes, dict):
@@ -183,47 +200,24 @@ pronoun.sem = APronoun()
 pospronoun.sem = APronoun()
 refpronoun.sem = APronoun()
 asphrase.sem = AsPhrase()
+set.sem = SetVerb()
 name.sem = NameConcat()
+vote.sem = VerbOnly()
+timing.sem = VerbOnly()
 phrase.sem = PopNT()
 asentence.sem = ASentence()
 command.sem = CleanSentences()
 
+# Convenience Function
+def parse(input):
+    parser = ParserPython(command)
+    parser.parse(input.lower())
+    return parser.getASG()
+
 # For testing...
 if __name__ == "__main__":
-    try:
-        import arpeggio
-        from arpeggio.export import *
-        
-        # Setting DEBUG to true will show log messages.
-        arpeggio.DEBUG = True
-        
-        parser = ParserPython(command)
-
-        # Then we export it to a dot file in order to visualise it. This is
-        # particulary handy for debugging purposes.
-        # We can make a jpg out of it using dot (part of graphviz) like this
-        # dot -O -Tjpg calc_parse_tree_model.dot
-        PMDOTExport().exportFile(parser.parser_model,
-                        "parse_tree_model.dot")
-                
-        # An expression we want to evaluate
-        input = "As Jim Bob, I set Bobby Jim to 3.".lower()
-        #input = "Thus is called the test game.".lower()
-        
-        # We create a parse tree or abstract syntax tree out of textual input
-        parse_tree = parser.parse(input)
-        
-        # Then we export it to a dot file in order to visualise it.
-        PTDOTExport().exportFile(parse_tree,
-                        "parse_tree.dot")
-
-        # getASG will start semantic analysis.
-        # In this case semantic analysis will evaluate expression and
-        # returned value will be the result of the input expression.
-        print "%s = %s" % (input, parser.getASG())
-        
-    except NoMatch, e:
-        print "Expected %s at position %s." % (e.value, str(e.parser.pos_to_linecol(e.position)))
-
+    import doctest
+    print "Running through the corpus..."
+    doctest.testfile('corpus.rst', globs={'parse': parse})
 
 # vim: ai et ts=4 sts=4 sw=4
