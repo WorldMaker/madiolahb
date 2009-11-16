@@ -44,17 +44,20 @@ Creating a character::
 Setting a character's professional advancement::
 
   >>> sen = parse('I have advanced to 3 in profession 1.')[0]
-  >>> sen['verb'], sen['profs'][0]
-  ('advanced', (1, 3))
+  >>> sen['verb'], sen[1]
+  ('advanced', 3)
 
   >>> sen = parse('I advanced 3 in my first profession.')[0]
-  >>> sen['verb'], sen['profs'][0]
-  ('advanced', (1, 3))
+  >>> sen['verb'], sen[1]
+  ('advanced', 3)
 
   >>> sen = parse('I advanced 2 in profession 2, 3 in profession 1, and 1 in my third profession.')[0]
-  >>> profs = dict(sen['profs'])
-  >>> sen['verb'], profs[1], profs[2], profs[3]
+  >>> sen['verb'], sen[1], sen[2], sen[3]
   ('advanced', 3, 2, 1)
+
+  >>> sen = parse('Advanced 3 in my first profession.')[0]
+  >>> sen['verb'], sen[1]
+  ('advanced', 3)
 
 Setting a character's spots::
 
@@ -76,24 +79,110 @@ Game Flow
 Timing verbs::
 
   >>> sen = parse('Ready.')[0]
-  >>> print sen['subject'], sen['verb']
-  None ready
+  >>> sen['subject'], sen['verb']
+  (None, 'ready')
 
   >>> sen = parse('I ready.')[0]
-  >>> print sen['subject'], sen['verb']
-  Pronoun ready
+  >>> sen['subject'], sen['verb']
+  (Pronoun, 'ready')
 
   >>> sen = parse('He readies.')[0]
-  >>> print sen['subject'], sen['verb']
-  Pronoun readies
+  >>> sen['subject'], sen['verb']
+  (Pronoun, 'readies')
 
   >>> sen = parse('I hold.')[0]
-  >>> print sen['subject'], sen['verb']
-  Pronoun hold
+  >>> sen['subject'], sen['verb']
+  (Pronoun, 'hold')
 
   >>> sen = parse('I interrupt.')[0]
-  >>> print sen['subject'], sen['verb']
-  Pronoun interrupt
+  >>> sen['subject'], sen['verb']
+  (Pronoun, 'interrupt')
+
+Exerting influence::
+
+  >>> sen = parse('I flow 1 to poise.')[0]
+  >>> sen['verb'], sen['poise']
+  ('flow', 1)
+
+  >>> sen = parse('He exerts 2 to charm.')[0]
+  >>> sen['verb'], sen['charm']
+  ('flow', 2)
+
+  >>> sen = parse('I exert 1 to mastery and 2 to sleight.')[0]
+  >>> sen['verb'], sen['mastery'], sen['sleight']
+  ('flow', 1, 2)
+
+  >>> sen = parse('Flow 1 to design.')[0]
+  >>> sen['verb'], sen['design']
+  ('flow', 1)
+
+Unchallenged actions::
+
+  >>> sen = parse('I act with poise.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('act', 'poise', False, 0)
+
+  >>> sen = parse('He heroically acts with mastery.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('act', 'mastery', True, 0)
+
+  >>> sen = parse('I act with charm under my first profession.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('act', 'charm', False, 1)
+
+  >>> sen = parse('Act with design.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('act', 'design', False, 0)
+
+  >>> sen = parse('Heroic action in sleight.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('act', 'sleight', True, 0)
+
+Challenged actions::
+
+  >>> sen = parse('I challenge Bob in poise.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('contest', 'poise', False, 0)
+  >>> sen['object']
+  'bob'
+
+  >>> sen = parse('He heroically challenges him with mastery.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('contest', 'mastery', True, 0)
+  >>> sen['object']
+  Pronoun
+
+  >>> sen = parse('I contest against joe@example.com with charm under my first profession.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('contest', 'charm', False, 1)
+  >>> sen['object']
+  Addr: joe@example.com
+
+  >>> sen = parse('Challenge Steve with design.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('contest', 'design', False, 0)
+  >>> sen['object']
+  'steve'
+
+  >>> sen = parse('Heroically challenge the Pope in sleight.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('contest', 'sleight', True, 0)
+  >>> sen['object']
+  'the pope'
+
+Losing ego::
+
+  >>> sen = parse('I lose 2 ego.')[0]
+  >>> sen['verb'], sen['count']
+  ('lose', 2)
+
+  >>> sen = parse('I lose 1.')[0]
+  >>> sen['verb'], sen['count']
+  ('lose', 1)
+
+  >>> sen = parse('Lose 3.')[0]
+  >>> sen['verb'], sen['count']
+  ('lose', 3)
 
 Setting the Time
 ----------------

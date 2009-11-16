@@ -20,8 +20,10 @@ pospronouns = ['my', 'his', 'her', 'its']
 refpronouns = ['me', 'myself', 'him', 'himself', 'her', 'herself', 'it',
     'itself']
 
+loseverb = rem(re.compile('loses?|drains?'))
+moveverb = rem(re.compile('moves?'))
 flowverb = rem(re.compile('flows?|exerts?'))
-herorem = rem(re.compile('hero(ically)?'))
+herorem = rem(re.compile('hero(ic(ally)?)?'))
 contestverb = rem(re.compile('challenges?|contests?'))
 actverb = rem(re.compile('act(s|ion)?'))
 setverb = rem(re.compile('(re)?set'))
@@ -31,8 +33,8 @@ chownverb = rem(re.compile('yields?'))
 timingverb = rem(re.compile('ready|readies|holds?|interrupts?'))
 activerem = rem(re.compile('(in)?active'))
 reservedverbs = ['is', 'am', 'at', 'to', 'for', 'advanced', 'have', 'has',
-    'lose', 'move', flowverb, herorem, contestverb, actverb, setverb,
-    reknownverb, voteverb, chownverb, timingverb, activerem]
+    loseverb, moveverb, flowverb, herorem, contestverb, actverb, setverb,
+    reknownverb, voteverb, chownverb, timingverb, activerem, 'in', 'with']
 
 def num():          return rem(re.compile(r'\d+'))
 def pronoun():      return pronouns
@@ -65,24 +67,25 @@ def stat():         return num, [(['ego', 'will'], Optional('drained')),
                         (element, Optional('strength'))]
 def has():          return ['have', 'has'], OneOrMore((stat, andcomma))
 
-def flow():         return flowverb, num, 'to', influence
+def flowto():       return num, 'to', influence
+def flow():         return flowverb, OneOrMore((flowto, andcomma))
 
 def heroic():       return Optional(herorem)
 def underprof():    return Optional(('under', [profnum, profcard]))
-def contest():      return heroic, contestverb, refid, ['with', 'in'], \
-                        influence, underprof
+def contest():      return heroic, contestverb, Optional('against'), refid, \
+                        ['with', 'in'], influence, underprof
 def act():          return heroic, actverb, ['with', 'in'], influence, \
                         underprof
 
 def set():          return setverb, Optional(refid), \
                         Optional(('to', Optional('time'), num))
 
-def lose():         return 'lose', num, Optional('ego')
+def lose():         return loseverb, num, Optional('ego')
 
 def amat():         return Optional(['am', 'is']), 'at', num, Optional(','), \
                         num
 
-def move():         return 'move', Optional(refid), dir, num, \
+def move():         return moveverb, Optional(refid), dir, num, \
                         Optional(rem(re.compile('spots?|spaces?')))
 
 def renown():       return reknownverb, id, 'for', num, influence, \
@@ -146,12 +149,16 @@ class NameConcat(SemanticAction):
 name.sem = NameConcat()
 
 class PopNT(SemanticAction):
+    def __init__(self, pos=0):
+        self.pos = pos
+
     def first_pass(self, parser, node, nodes):
-        return nodes[0]
+        return nodes[self.pos]
 
 id.sem = PopNT()
 refid.sem = PopNT()
 phrase.sem = PopNT()
+underprof.sem = PopNT(1)
 
 class AsPhrase(SemanticAction):
     def first_pass(self, parser, node, nodes):
@@ -214,17 +221,6 @@ class ProfPt(SemanticAction):
 
 profpt.sem = ProfPt()
 
-class Advanced(SemanticAction):
-    def first_pass(self, parser, node, nodes):
-        sd = {'verb': 'advanced', 'profs': []}
-        for n in nodes:
-            if isinstance(n, tuple):
-                sd['profs'].append(n)
-        node.nodes = sd
-        return node
-
-advanced.sem = Advanced()
-
 class Stat(SemanticAction):
     def first_pass(self, parser, node, nodes):
         # Return (stat, points)
@@ -235,14 +231,63 @@ class Stat(SemanticAction):
 
 stat.sem = Stat()
 
-class Has(SemanticAction):
+class FlowTo(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        # Return (influence, count)
+        return nodes[2].value, nodes[0]
+
+flowto.sem = FlowTo()
+
+class TupleVerb(SemanticAction):
+    def __init__(self, name):
+        self.name = name
+
     def first_pass(self, parser, node, nodes):
         stats = [n for n in nodes if isinstance(n, tuple)]
         node.nodes = dict(stats)
-        node.nodes['verb'] = 'has'
+        node.nodes['verb'] = self.name
         return node
 
-has.sem = Has()
+has.sem = TupleVerb('has')
+flow.sem = TupleVerb('flow')
+advanced.sem = TupleVerb('advanced')
+
+class Action(SemanticAction):
+    def __init__(self, verb):
+        self.verb = verb
+
+    def first_pass(self, parser, node, nodes):
+        sd = {'verb': self.verb, 'object': None, 'heroic': False,
+            'profession': 0}
+        for n in nodes:
+            if isinstance(n, Special):
+                if n.type == 'Heroic':
+                    sd['heroic'] = True
+                else: # Pronoun, Addr
+                    sd['object'] = n
+            elif isinstance(n, basestring): # Name
+                sd['object'] = n
+            elif isinstance(n, int):
+                sd['profession'] = n
+            elif isinstance(n, Terminal) and n.value in influence:
+                sd['influence'] = n.value
+        node.nodes = sd
+        return node
+
+act.sem = Action('act')
+contest.sem = Action('contest')
+
+class Lose(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        sd = {'verb': 'lose'}
+        if isinstance(nodes[-1], int):
+            sd['count'] = nodes[-1]
+        else:
+            sd['count'] = nodes[-2]
+        node.nodes = sd
+        return node
+
+lose.sem = Lose()
 
 class ASentence(SemanticAction):
     def first_pass(self, parser, node, nodes):
