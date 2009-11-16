@@ -50,7 +50,7 @@ def andcomma():     return Optional([(',', 'and'), ',', 'and'])
 
 ## Verb Phrases ##
 
-def playing():      return 'is', 'playing', name
+def playing():      return ['am', 'is'], 'playing', name
 
 def profnum():      return 'profession', num
 def profcard():     return pospronoun, ['first', 'second', 'third'], \
@@ -131,6 +131,10 @@ class NameConcat(SemanticAction):
     def first_pass(self, parser, node, nodes):
         return ' '.join(n.value for n in nodes)
 
+class PopT(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        return node.value
+
 class PopNT(SemanticAction):
     def first_pass(self, parser, node, nodes):
         return nodes[0]
@@ -142,13 +146,13 @@ class AsPhrase(SemanticAction):
 
 class SetVerb(SemanticAction):
     def first_pass(self, parser, node, nodes):
-        node.nodes = {'verb': 'set', 'time': None, 'subject': None}
+        node.nodes = {'verb': 'set', 'time': None, 'object': None}
         nodes.pop(0) # pop the verb
         if len(nodes) > 0:
             if isinstance(nodes[-1], int):
                 node.nodes['time'] = nodes[-1]
             if not (isinstance(nodes[0], Terminal) and nodes[0].value == 'to'):
-                node.nodes['subject'] = nodes[0]
+                node.nodes['object'] = nodes[0]
         return node
 
 class VerbOnly(SemanticAction):
@@ -156,6 +160,11 @@ class VerbOnly(SemanticAction):
         n = NonTerminal(node.type, node.position, [])
         n.nodes = {'verb': node.value}
         return n
+
+class VerbFoo(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        node.nodes = {'verb': nodes[-2].value, 'object': nodes[-1]}
+        return node
 
 class ASentence(SemanticAction):
     def first_pass(self, parser, node, nodes):
@@ -200,8 +209,10 @@ pronoun.sem = APronoun()
 pospronoun.sem = APronoun()
 refpronoun.sem = APronoun()
 asphrase.sem = AsPhrase()
+playing.sem = VerbFoo()
 set.sem = SetVerb()
 name.sem = NameConcat()
+addr.sem = PopT()
 vote.sem = VerbOnly()
 timing.sem = VerbOnly()
 phrase.sem = PopNT()

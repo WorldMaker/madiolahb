@@ -1,6 +1,8 @@
 Language Corpus
 ===============
 
+:Copyright: 2009 Max Battcher. Some Rights Reserved (CC by-sa).
+
 This is a collection of doctests to test that sentences in the language
 parse as expected.
 
@@ -25,6 +27,22 @@ Double check that other sentences are not IM sentences::
 
   >>> parse('Ready.')[0]['imsentence']
   False
+
+Character Description
+---------------------
+
+Creating a character::
+
+   >>> sen = parse('I am playing the pope.')[0]
+   >>> sen['subject'], sen['verb'], sen['object']
+   (Pronoun, 'playing', 'the pope')
+
+   >>> sen = parse('rob@gwave.example.com is playing Clown.')[0]
+   >>> sen['subject'], sen['verb'], sen['object']
+   ('rob@gwave.example.com', 'playing', 'clown')
+
+As Phrase
+---------
 
 Game Flow
 ---------
@@ -57,17 +75,17 @@ Setting the Time
 Resetting and otherwise setting the time track::
 
   >>> sen = parse('Reset.')[0]
-  >>> print sen['verb'], sen['time'], sen['subject']
+  >>> print sen['verb'], sen['time'], sen['object']
   set None None
 
   >>> sen = parse('Set to 1.')[0]
-  >>> print sen['verb'], sen['time'], sen['subject']
+  >>> print sen['verb'], sen['time'], sen['object']
   set 1 None
 
   >>> sen = parse('Set myself to 1.')[0]
-  >>> print sen['verb'], sen['time'], sen['subject']
+  >>> print sen['verb'], sen['time'], sen['object']
   set 1 Pronoun
 
   >>> sen = parse('Reset myself.')[0]
-  >>> print sen['verb'], sen['time'], sen['subject']
+  >>> print sen['verb'], sen['time'], sen['object']
   set None Pronoun
