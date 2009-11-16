@@ -29,9 +29,10 @@ reknownverb = rem(re.compile('nominates?|props,?'))
 voteverb = rem(re.compile('assents?|aye|dissents?|nay'))
 chownverb = rem(re.compile('yields?'))
 timingverb = rem(re.compile('ready|readies|holds?|interrupts?'))
+activerem = rem(re.compile('(in)?active'))
 reservedverbs = ['is', 'am', 'at', 'to', 'for', 'advanced', 'have', 'has',
     'lose', 'move', flowverb, herorem, contestverb, actverb, setverb,
-    reknownverb, voteverb, chownverb, timingverb, 'inactive']
+    reknownverb, voteverb, chownverb, timingverb, activerem]
 
 def num():          return rem(re.compile(r'\d+'))
 def pronoun():      return pronouns
@@ -93,7 +94,7 @@ def chown():        return chownverb, 'to', addr
 
 def timing():       return timingverb
 
-def deactivate():   return Optional(['am', 'is']), 'inactive'
+def deactivate():   return Optional(['am', 'is']), activerem
 
 ## Final Composition ##
 
