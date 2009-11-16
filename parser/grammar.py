@@ -101,7 +101,7 @@ def phrase():       return [playing, advanced, has, flow, contest, act, set,
                         lose, amat, move, renown, vote, chown, timing,
                         deactivate]
 
-def asentence():    return Optional(asphrase), Optional(pronoun), phrase
+def asentence():    return Optional(asphrase), Optional(id), phrase
 def sentence():     return [imsentence, asentence], '.'
 def command():      return OneOrMore(sentence)
 
