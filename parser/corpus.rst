@@ -184,26 +184,152 @@ Losing ego::
   >>> sen['verb'], sen['count']
   ('lose', 3)
 
+Moving the Character
+--------------------
+
+Setup and teleport::
+
+  >>> sen = parse('I am at 1, 2.')[0]
+  >>> sen['verb'], sen['x'], sen['y']
+  ('at', 1, 2)
+
+  >>> sen = parse('He is at 3 4.')[0]
+  >>> sen['verb'], sen['x'], sen['y']
+  ('at', 3, 4)
+
+  # TODO: NoMatch? Fix this?
+  # >>> sen = parse('It at 5 6.')[0]
+  # >>> sen['verb'], sen['x'], sen['y']
+  # ('at', 5, 6)
+
+  >>> sen = parse('Am at 7, 8.')[0]
+  >>> sen['verb'], sen['x'], sen['y']
+  ('at', 7, 8)
+
+  >>> sen = parse('At 9, 10.')[0]
+  >>> sen['verb'], sen['x'], sen['y']
+  ('at', 9, 10)
+
+Movement::
+
+  >>> sen = parse('I move to 1 spot SE.')[0]
+  >>> sen['verb'], sen['dir'], sen['count'], sen['object']
+  ('move', 'se', 1, None)
+
+  >>> sen = parse('I move myself to 1 spot NE.')[0]
+  >>> sen['verb'], sen['dir'], sen['count'], sen['object']
+  ('move', 'ne', 1, Pronoun)
+
+  >>> sen = parse('He moves to 2 spaces E.')[0]
+  >>> sen['verb'], sen['dir'], sen['count']
+  ('move', 'e', 2)
+
+  >>> sen = parse('Move Bob the Unbearable to 8 paces NW.')[0]
+  >>> sen['verb'], sen['dir'], sen['count']
+  ('move', 'nw', 8)
+
+  >>> sen = parse('Move to 3 SW.')[0]
+  >>> sen['verb'], sen['dir'], sen['count']
+  ('move', 'sw', 3)
+
 Setting the Time
 ----------------
 
 Resetting and otherwise setting the time track::
 
+  >>> sen = parse('I reset.')[0]
+  >>> sen['verb'], sen['time'], sen['object']
+  ('set', None, None)
+
+  >>> sen = parse('Bob sets to 1.')[0]
+  >>> sen['verb'], sen['time'], sen['object']
+  ('set', 1, None)
+
+  >>> sen = parse('I set myself to 1.')[0]
+  >>> sen['verb'], sen['time'], sen['object']
+  ('set', 1, Pronoun)
+
+  >>> sen = parse('I reset myself.')[0]
+  >>> sen['verb'], sen['time'], sen['object']
+  ('set', None, Pronoun)
+
   >>> sen = parse('Reset.')[0]
-  >>> print sen['verb'], sen['time'], sen['object']
-  set None None
+  >>> sen['verb'], sen['time'], sen['object']
+  ('set', None, None)
 
   >>> sen = parse('Set to 1.')[0]
-  >>> print sen['verb'], sen['time'], sen['object']
-  set 1 None
+  >>> sen['verb'], sen['time'], sen['object']
+  ('set', 1, None)
 
   >>> sen = parse('Set myself to 1.')[0]
-  >>> print sen['verb'], sen['time'], sen['object']
-  set 1 Pronoun
+  >>> sen['verb'], sen['time'], sen['object']
+  ('set', 1, Pronoun)
 
   >>> sen = parse('Reset myself.')[0]
-  >>> print sen['verb'], sen['time'], sen['object']
-  set None Pronoun
+  >>> sen['verb'], sen['time'], sen['object']
+  ('set', None, Pronoun)
+
+Renown
+======
+
+Nominating renown::
+
+  >>> sen = parse('I nominate Tom the Challenger for 1 poise renown.')[0]
+  >>> sen['verb'], sen['object'], sen['influence'], sen['count']
+  ('renown', 'tom the challenger', 'poise', 1)
+
+Voting::
+
+  >>> parse('I assent.')[0]['verb']
+  'assent'
+
+  >>> parse('I dissent.')[0]['verb']
+  'dissent'
+
+  >>> parse('Aye.')[0]['verb']
+  'aye'
+
+  >>> parse('Nay.')[0]['verb']
+  'nay'
+
+Acclimation::
+
+  >>> parse('I acclimate.')[0]['verb']
+  'acclimate'
+
+  >>> parse('Acclimate.')[0]['verb']
+  'acclimate'
+
+Character Control
+=================
+
+Changing character ownership::
+
+  >>> sen = parse('I yield to <jim@example.org>.')[0]
+  >>> sen['verb'], sen['subject'], sen['object'], sen['receiver']
+  ('chown', Pronoun, None, Addr: jim@example.org)
+
+  >>> sen = parse('I yield Bob the Fortune Teller to <jim@example.org>.')[0]
+  >>> sen['verb'], sen['subject'], sen['object'], sen['receiver']
+  ('chown', Pronoun, 'bob the fortune teller', Addr: jim@example.org)
+
+  >>> sen = parse('jim@example.org yields Bob the Fortune Teller to me.')[0]
+  >>> sen['verb'], sen['subject'], sen['object'], sen['receiver']
+  ('chown', Addr: jim@example.org, 'bob the fortune teller', Pronoun)
+
+Activating/deactivating a character (from the timer/choreography)::
+
+  >>> sen = parse('I am inactive.')[0]
+  >>> sen['subject'], sen['verb']
+  (Pronoun, 'deactivate')
+
+  >>> sen = parse('Active.')[0]
+  >>> sen['subject'], sen['verb']
+  (None, 'activate')
+
+  >>> sen = parse('Bob is active.')[0]
+  >>> sen['subject'], sen['verb']
+  ('bob', 'activate')
 
 Errata
 ======
@@ -218,9 +344,9 @@ As phrase::
   >>> sen['as']
   Addr: john@example.com
 
-  >>> sen = parse('For Jason the Awesome Superhero, ready.')[0]
+  >>> sen = parse('For Tommy the Awesome Superhero, ready.')[0]
   >>> sen['as']
-  'jason the awesome superhero'
+  'tommy the awesome superhero'
 
 Multiple sentences::
 

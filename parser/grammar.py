@@ -6,12 +6,14 @@ import sys
 sys.path.append('arpeggio.zip')
 
 from arpeggio import *
-from arpeggio import RegExMatch as rem
+from arpeggio import RegExMatch
+
+regex = lambda pattern: RegExMatch(re.compile(pattern))
 
 ## Atomic bits and pieces ##
 
 imverb = [('is', 'called'), 'continues', 'ends']
-dir = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']
+dir = ['ne', 'nw', 'se', 'sw', 'n', 's', 'e', 'w']
 element = ['life', 'earth', 'water', 'energy', 'air', 'water']
 influence = ['mastery', 'persistence', 'design', 'poise', 'sleight', 'charm',
     'mind', 'body', 'spirit']
@@ -20,32 +22,33 @@ pospronouns = ['my', 'his', 'her', 'its']
 refpronouns = ['me', 'myself', 'him', 'himself', 'her', 'herself', 'it',
     'itself']
 
-loseverb = rem(re.compile('loses?|drains?'))
-moveverb = rem(re.compile('moves?'))
-flowverb = rem(re.compile('flows?|exerts?'))
-herorem = rem(re.compile('hero(ic(ally)?)?'))
-contestverb = rem(re.compile('challenges?|contests?'))
-actverb = rem(re.compile('act(s|ion)?'))
-setverb = rem(re.compile('(re)?set'))
-reknownverb = rem(re.compile('nominates?|props,?'))
-voteverb = rem(re.compile('assents?|aye|dissents?|nay'))
-chownverb = rem(re.compile('yields?'))
-timingverb = rem(re.compile('ready|readies|holds?|interrupts?'))
-activerem = rem(re.compile('(in)?active'))
-reservedverbs = ['is', 'am', 'at', 'to', 'for', 'advanced', 'have', 'has',
-    loseverb, moveverb, flowverb, herorem, contestverb, actverb, setverb,
-    reknownverb, voteverb, chownverb, timingverb, activerem, 'in', 'with']
+loseverb = regex(r'(loses?|drains?)\s+')
+moveverb = regex(r'moves?\s+')
+flowverb = regex(r'(flows?|exerts?)\s+')
+herorem = regex(r'hero(ic(ally)?)?\s+')
+contestverb = regex(r'(challenges?|contests?)\s+')
+actverb = regex(r'act(s|ion)?\s+')
+setverb = regex('(re)?sets?')
+reknownverb = regex(r'(nominates?|props,?)\s+')
+voteverb = regex('assents?|aye|dissents?|nay|acclimates?')
+chownverb = regex(r'yields?\s+')
+timingverb = regex('ready|readies|holds?|interrupts?')
+activerem = regex('(in)?active')
+reservedverbs = ['is ', 'am ', 'at ', 'to ', 'for ', 'advanced ', 'have ',
+    'has ', loseverb, moveverb, flowverb, herorem, contestverb, actverb,
+    setverb, reknownverb, voteverb, chownverb, timingverb, activerem, 'in ',
+    'with ']
 
-def num():          return rem(re.compile(r'\d+'))
+def num():          return regex(r'\d+')
 def pronoun():      return pronouns
 def pospronoun():   return pospronouns
 def refpronoun():   return refpronouns
-def imsentence():   return ['this', 'thus'], imverb, rem(re.compile(r'[^\.]+'))
+def imsentence():   return ['this', 'thus'], imverb, regex(r'[^\.]+')
 
 # TODO: Grab a better email/im RegEx
-def addr():         return rem(re.compile(r'[\w0-9\-_\.\+]+\@[\w0-9\-_\.]+'))
-def name():         return OneOrMore((Not(reservedverbs),
-                        rem(re.compile(r'[^\.\s\,]+'))))
+def addr():         return regex(r'[\w0-9\-_\.\+]+\@[\w0-9\-_\.]+')
+def notreserved():  return Not(reservedverbs)
+def name():         return OneOrMore( (notreserved, regex(r'[^\.\s\,]+')) )
 def id():           return [pronoun, addr, name]
 def refid():        return [refpronoun, addr, name]
 def asphrase():     return [('as', 'for'), 'for', 'as'], [addr, name], ','
@@ -53,7 +56,7 @@ def andcomma():     return Optional([(',', 'and'), ',', 'and'])
 
 ## Verb Phrases ##
 
-def playing():      return ['am', 'is'], 'playing', name
+def playing():      return 'playing', name
 
 def profnum():      return 'profession', num
 def profcard():     return pospronoun, ['first', 'second', 'third'], \
@@ -82,28 +85,29 @@ def set():          return setverb, Optional(refid), \
 
 def lose():         return loseverb, num, Optional('ego')
 
-def amat():         return Optional(['am', 'is']), 'at', num, Optional(','), \
-                        num
+def amat():         return 'at', num, Optional(','), num
 
-def move():         return moveverb, Optional(refid), dir, num, \
-                        Optional(rem(re.compile('spots?|spaces?')))
+def move():         return moveverb, Optional(refid), 'to', num, \
+                        Optional(regex(r'spots?|s?paces?')), dir
 
 def renown():       return reknownverb, id, 'for', num, influence, \
                         Optional('renown')
 
 def vote():         return voteverb
 
-def chown():        return chownverb, 'to', addr
+def chown():        return chownverb, Optional(refid), 'to', [refpronoun, 
+                        ('<', addr, '>')]
 
 def timing():       return timingverb
 
-def deactivate():   return Optional(['am', 'is']), activerem
+def deactivate():   return activerem
 
 ## Final Composition ##
 
-def phrase():       return [playing, advanced, has, flow, contest, act, set,
-                        lose, amat, move, renown, vote, chown, timing,
-                        deactivate]
+def isphrase():     return Optional(['am', 'is']), [deactivate, amat, playing]
+def phrase():       return [advanced, has, flow, contest, act, move,
+                        set, lose, renown, vote, chown, timing,
+                        isphrase]
 
 def asentence():    return Optional(asphrase), Optional(id), phrase
 def sentence():     return [imsentence, asentence], '.'
@@ -159,6 +163,7 @@ id.sem = PopNT()
 refid.sem = PopNT()
 phrase.sem = PopNT()
 underprof.sem = PopNT(1)
+isphrase.sem = PopNT(-1)
 
 class AsPhrase(SemanticAction):
     def first_pass(self, parser, node, nodes):
@@ -174,7 +179,7 @@ class SetVerb(SemanticAction):
         if len(nodes) > 0:
             if isinstance(nodes[-1], int):
                 node.nodes['time'] = nodes[-1]
-            if not (isinstance(nodes[0], Terminal) and nodes[0].value == 'to'):
+            if isinstance(nodes[0], (basestring, Special)):
                 node.nodes['object'] = nodes[0]
         return node
 
@@ -289,6 +294,66 @@ class Lose(SemanticAction):
 
 lose.sem = Lose()
 
+class AmAt(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        sd = {'verb': 'at', 'y': nodes[-1],
+            'x': nodes[-3] if isinstance(nodes[-2], Terminal) else nodes[-2],
+        }
+        node.nodes = sd
+        return node
+
+amat.sem = AmAt()
+
+class Move(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        poscount, posdir = -2, -1
+        if isinstance(nodes[-2], Terminal):
+            poscount = -3
+        sd = {'verb': 'move',
+            'object': None,
+            'count': nodes[poscount],
+            'dir': nodes[posdir].value,
+        }
+        if isinstance(nodes[1], (basestring, Special)):
+            sd['object'] = nodes[1]
+        node.nodes = sd
+        return node
+
+move.sem = Move()
+
+class Deactivate(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        n = NonTerminal(node.type, node.position, [])
+        n.nodes = {
+            'verb': 'deactivate' if node.value.startswith('in') else 'activate',
+        }
+        return n
+
+deactivate.sem = Deactivate()
+
+class Chown(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        node.nodes = {'verb': 'chown',
+            'object': nodes[1] if isinstance(nodes[1], (basestring, Special)) \
+                else None,
+            'receiver': nodes[-2] if isinstance(nodes[-2], Special) \
+                else nodes[-1],
+        }
+        return node
+
+chown.sem = Chown()
+
+class Renown(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        node.nodes = {'verb': 'renown',
+            'object': nodes[1],
+            'count': nodes[3],
+            'influence': nodes[4].value,
+        }
+        return node
+
+renown.sem = Renown()
+
 class ASentence(SemanticAction):
     def first_pass(self, parser, node, nodes):
         sd = {'nodes': [], 'subject': None}
@@ -333,7 +398,13 @@ command.sem = CleanSentences()
 # Convenience Function
 def parse(input):
     parser = ParserPython(command)
-    parser.parse(input.lower())
+    try:
+        parser.parse(input.lower())
+    except NoMatch, e:
+        import logging
+        logging.error("Expected %s at position %s.", e.value,
+            e.parser.pos_to_linecol(e.position))
+        raise e
     return parser.getASG()
 
 # For testing...
