@@ -122,7 +122,7 @@ Unchallenged actions::
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('act', 'poise', False, 0)
 
-  >>> sen = parse('He heroically acts with mastery.')[0]
+  >>> sen = parse('He acts heroically with mastery.')[0]
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('act', 'mastery', True, 0)
 
@@ -130,11 +130,11 @@ Unchallenged actions::
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('act', 'charm', False, 1)
 
-  >>> sen = parse('Act with design.')[0]
+  >>> sen = parse('Action with design.')[0]
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('act', 'design', False, 0)
 
-  >>> sen = parse('Heroic action in sleight.')[0]
+  >>> sen = parse('Act heroic in sleight.')[0]
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('act', 'sleight', True, 0)
 
@@ -146,7 +146,7 @@ Challenged actions::
   >>> sen['object']
   'bob'
 
-  >>> sen = parse('He heroically challenges him with mastery.')[0]
+  >>> sen = parse('He challenges him heroically with mastery.')[0]
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('contest', 'mastery', True, 0)
   >>> sen['object']
@@ -164,7 +164,7 @@ Challenged actions::
   >>> sen['object']
   'steve'
 
-  >>> sen = parse('Heroically challenge the Pope in sleight.')[0]
+  >>> sen = parse('Challenge the Pope heroically in sleight.')[0]
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('contest', 'sleight', True, 0)
   >>> sen['object']
