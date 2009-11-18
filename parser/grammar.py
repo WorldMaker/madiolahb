@@ -17,7 +17,7 @@ dir = ['ne', 'nw', 'se', 'sw', 'n', 's', 'e', 'w']
 element = ['life', 'earth', 'water', 'energy', 'air', 'water']
 influence = ['mastery', 'persistence', 'design', 'poise', 'sleight', 'charm',
     'mind', 'body', 'spirit']
-pronouns = ['i', 'he', 'she', 'it']
+pronouns = ['i ', 'he ', 'she ', 'it ']
 pospronouns = ['my', 'his', 'her', 'its']
 refpronouns = ['me', 'myself', 'him', 'himself', 'her', 'herself', 'it',
     'itself']
@@ -42,7 +42,7 @@ reservedverbs = ['is ', 'am ', 'at ', 'to ', 'for ', 'advanced ', 'have ',
 def num():          return regex(r'\d+')
 def pronoun():      return pronouns
 def pospronoun():   return pospronouns
-def refpronoun():   return refpronouns
+def refpronoun():   return refpronouns, And(regex(r'\s|.'))
 def imsentence():   return ['this', 'thus'], imverb, regex(r'[^\.]+')
 
 # TODO: Grab a better email/im RegEx
