@@ -201,10 +201,11 @@ Setup and teleport::
   >>> sen['verb'], sen['x'], sen['y']
   ('at', 3, 4)
 
-  # TODO: NoMatch? Fix this?
-  # >>> sen = parse('It at 5 6.')[0]
-  # >>> sen['verb'], sen['x'], sen['y']
-  # ('at', 5, 6)
+  # This is ugly, but possible. Was a NoMatch at one point...
+  # Was tied to another disambiguation problem...
+  >>> sen = parse('It at 5 6.')[0]
+  >>> sen['verb'], sen['x'], sen['y']
+  ('at', 5, 6)
 
   >>> sen = parse('Am at 7, 8.')[0]
   >>> sen['verb'], sen['x'], sen['y']
