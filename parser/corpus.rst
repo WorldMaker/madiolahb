@@ -138,6 +138,10 @@ Unchallenged actions::
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('act', 'sleight', True, 0)
 
+  >>> sen = parse('Hero action with poise.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
+  ('act', 'poise', True, 0)
+
 Challenged actions::
 
   >>> sen = parse('I challenge Bob in poise.')[0]

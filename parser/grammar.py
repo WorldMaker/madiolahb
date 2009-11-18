@@ -75,9 +75,9 @@ def flow():         return flowverb, OneOrMore((flowto, andcomma))
 
 def heroic():       return Optional(herorem)
 def underprof():    return Optional(('under', [profnum, profcard]))
-def contest():      return contestverb, Optional('against'), refid, \
+def contest():      return heroic, contestverb, Optional('against'), refid, \
                         heroic, ['with', 'in'], influence, underprof
-def act():          return actverb, heroic, ['with', 'in'], influence, \
+def act():          return heroic, actverb, heroic, ['with', 'in'], influence, \
                         underprof
 
 def set():          return setverb, Optional(refid), \
