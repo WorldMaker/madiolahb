@@ -8,7 +8,10 @@ sys.path.append('arpeggio.zip')
 from arpeggio import *
 from arpeggio import RegExMatch
 
-regex = lambda pattern: RegExMatch(re.compile(pattern))
+def regex(pattern):
+    r = RegExMatch(re.compile(pattern))
+    r.pattern = pattern
+    return r
 
 ## Atomic bits and pieces ##
 
@@ -22,22 +25,22 @@ pospronouns = ['my', 'his', 'her', 'its']
 refpronouns = ['me', 'myself', 'him', 'himself', 'her', 'herself', 'it',
     'itself']
 
-loseverb = regex(r'(loses?|drains?)\s+')
-moveverb = regex(r'moves?\s+')
-flowverb = regex(r'(flows?|exerts?)\s+')
-herorem = regex(r'hero(ic(ally)?)?\s+')
-contestverb = regex(r'(challenges?|contests?)\s+')
-actverb = regex(r'act(s|ion)?\s+')
+loseverb = regex(r'(loses?|drains?)')
+moveverb = regex(r'moves?')
+flowverb = regex(r'(flows?|exerts?)')
+herorem = regex(r'hero(ic(ally)?)?')
+contestverb = regex(r'challenges?|contests?')
+actverb = regex(r'act(s|ion)?')
 setverb = regex('(re)?sets?')
-reknownverb = regex(r'(nominates?|props,?)\s+')
+reknownverb = regex(r'nominates?|props,?')
 voteverb = regex('assents?|aye|dissents?|nay|acclimates?')
 chownverb = regex(r'yields?\s+')
 timingverb = regex('ready|readies|holds?|interrupts?')
 activerem = regex('(in)?active')
-reservedverbs = ['is ', 'am ', 'at ', 'to ', 'for ', 'advanced ', 'have ',
-    'has ', loseverb, moveverb, flowverb, herorem, contestverb, actverb,
-    setverb, reknownverb, voteverb, chownverb, timingverb, activerem, 'in ',
-    'with ']
+reservedverbs = ['is', 'am', 'at', 'to', 'for', 'advanced', 'have', 'has',
+    loseverb, moveverb, flowverb, herorem, contestverb, actverb,
+    setverb, reknownverb, voteverb, timingverb, chownverb, activerem,
+    'in', 'with']
 
 def num():          return regex(r'\d+')
 def pronoun():      return pronouns
@@ -47,7 +50,15 @@ def imsentence():   return ['this', 'thus'], imverb, regex(r'[^\.]+')
 
 # TODO: Grab a better email/im RegEx
 def addr():         return regex(r'[\w0-9\-_\.\+]+\@[\w0-9\-_\.]+')
-def notreserved():  return Not(reservedverbs)
+nr = []
+def notreserved():
+                    if not nr:
+                        for v in reservedverbs:
+                            if isinstance(v, basestring):
+                                nr.append(regex(v + r'[\s\.\,]'))
+                            elif isinstance(v, RegExMatch):
+                                nr.append(regex("(%s)[\s\.\,]" % v.pattern))
+                    return Not(nr)
 def name():         return OneOrMore( (notreserved, regex(r'[^\.\s\,]+')) )
 def id():           return [pronoun, addr, name]
 def refid():        return [refpronoun, addr, name]
