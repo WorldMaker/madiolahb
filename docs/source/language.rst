@@ -46,8 +46,10 @@ pronouns in the same sentence doesn't affect the meaning to the Bee.
 
 For players with one and only one character The Pronoun refers to "the
 current player's character". Players with multiple characters will deal
-with The Pronoun as "the current character". The current character can
-be set with the "as clause", which can be prepended to most commands:
+with The Pronoun as "the current character". The current character is
+implicitly set in most sentences. The current character can be set
+*explicitly* with the "as clause", which can be prepended to most
+commands:
 
   This example won't parse, as it needs a command, but should get the
   point across... **[**\ As *Character Name*, ...\ **]**
