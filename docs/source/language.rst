@@ -95,5 +95,6 @@ Commands
    :maxdepth: 2
 
    chardesc
+   timing
 
 .. vim: ai spell tw=72
