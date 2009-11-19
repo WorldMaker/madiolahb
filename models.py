@@ -7,8 +7,8 @@ class Character(db.Model):
     name = db.StringProperty()
     active = db.BooleanProperty(default=True)
     # Source
-    ego = db.IntegerProperty(required=True)
-    will = db.IntegerProperty(required=True)
+    ego = db.IntegerProperty(default=0)
+    will = db.IntegerProperty(default=0)
     # "Drained" Spots
     ego_spot = db.IntegerProperty(default=0)
     will_spot = db.IntegerProperty(default=0)
