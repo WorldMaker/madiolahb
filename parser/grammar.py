@@ -22,8 +22,8 @@ influence = ['mastery', 'persistence', 'design', 'poise', 'sleight', 'charm',
     'mind', 'body', 'spirit']
 pronouns = ['i ', 'he ', 'she ', 'it ']
 pospronouns = ['my', 'his', 'her', 'its']
-refpronouns = ['me', 'myself', 'him', 'himself', 'her', 'herself', 'it',
-    'itself']
+refpronouns = ['myself', 'me', 'himself', 'him', 'herself', 'her', 'itself',
+    'its']
 
 loseverb = regex(r'(loses?|drains?)')
 moveverb = regex(r'moves?')
