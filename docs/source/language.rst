@@ -30,6 +30,10 @@ more examples than specifically mentioned in this document. Example:
 
    **[**\ I move *Character Name* to *count* spaces *direction*.\ **]**
 
+The parser also supports the obvious third-person variations of verbs
+and many words in a sentence can be elided, including the subject for
+a more imperative tone.
+
 .. note::
 
    It may be important to keep in mind that although commands *look*
