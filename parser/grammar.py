@@ -402,8 +402,8 @@ def parse(input):
         parser.parse(input.lower())
     except NoMatch, e:
         import logging
-        logging.error("Expected %s at position %s.", e.value,
-            e.parser.pos_to_linecol(e.position))
+        logging.error("Expected %s at position %s of [%s].", e.value,
+            e.parser.pos_to_linecol(e.position), input)
         raise e
     return parser.getASG()
 
