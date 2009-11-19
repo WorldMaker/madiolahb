@@ -96,5 +96,6 @@ Commands
 
    chardesc
    timing
+   acting
 
 .. vim: ai spell tw=72
