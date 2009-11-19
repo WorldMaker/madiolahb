@@ -11,7 +11,7 @@ A note on terminology: the Bee refers to the objects that it manipulates
 as characters and this documentation will refer to them as such, but
 they don't necessarily have to be "characters". In HCE terms, anywhere
 you see the word character you may mentally replace it with "thing with
-a LifeWheel".
+a Life Wheel".
 
 .. contents::
 
@@ -33,5 +33,44 @@ this command deals specifically with a player rather than a character,
 the Pronoun here represents "the current player". This command
 automatically sets "the current character" to the newly created
 character, for pronouns in subsequent commands.
+
+Placing Tokens on the Life Wheel
+================================
+
+The "have verb" sets a number of tokens for a given spot on the life
+wheel for a character. The basic forms look like:
+
+  | **[**\ I have *Number* ego.\ **]**
+  | **[**\ I have *Number* will.\ **]**
+  | **[**\ I have *Number* *Element*.\ **]**
+  | **[**\ I have *Number* ego drained.\ **]**
+  | **[**\ I have *Number* will drained.\ **]**
+
+One or more of these can be combined, "have" will accept a list of forms
+above, optionally separated by a comma and/or "and".
+
+"Ego" and "will" refer to ego and will tokens in the source, while the
+"drained" form refers to tokens in the ego and will spaces of the life
+wheel. The drained forms should be rarely used in the event of resetting
+a game or correcting a Bee mistake.
+
+  **[**\ I have 9 ego, 12 will, 3 life, and 3 energy.\ **]**
+
+Advancing in a Profession
+=========================
+
+**[**\ I have advanced *Number* in profession *Number*.\ **]**
+Professions are referred to by number (1, 2, or 3) and multiple
+professions can be set in a single sentence, chaining them with an
+optional comma and/or "and". Professions can also be referred by a
+cardinal number ("first", "second", or "third") in the form **[**\ ...in
+my *Cardinal* profession.\ **]**.
+
+Although the verb here is "advanced" (or "have advanced"), the number
+provided is the *absolute* number of tokens (and thus can in fact
+represent a decrease in profession).
+
+  **[**\ I have 3 in my first profession, 2 in profession 2, and 3 in my
+  third profession.\ **]**
 
 .. vim: ai spell tw=72
