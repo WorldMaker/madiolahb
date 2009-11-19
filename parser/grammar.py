@@ -115,10 +115,10 @@ def deactivate():   return activerem
 
 ## Final Composition ##
 
-def isphrase():     return Optional(['am', 'is']), [deactivate, amat, playing]
+def isphrase():     return Optional(['am', 'is']), [timing, deactivate, amat,
+                        playing]
 def phrase():       return [advanced, has, flow, contest, act, move,
-                        set, lose, renown, vote, chown, timing,
-                        isphrase]
+                        set, lose, renown, vote, chown, isphrase]
 
 def asentence():    return Optional(asphrase), Optional(id), phrase
 def sentence():     return [imsentence, asentence], '.'

@@ -98,6 +98,10 @@ Timing verbs::
   >>> sen['subject'], sen['verb']
   (Pronoun, 'interrupt')
 
+  >>> sen = parse('The ready-made weapon holder is ready.')[0]
+  >>> sen['subject'], sen['verb']
+  ('the ready-made weapon holder', 'ready')
+
 Exerting influence::
 
   >>> sen = parse('I flow 1 to poise.')[0]
