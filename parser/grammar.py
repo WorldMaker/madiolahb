@@ -35,7 +35,7 @@ setverb = regex('(re)?sets?')
 reknownverb = regex(r'nominates?|props,?')
 voteverb = regex('assents?|aye|dissents?|nay|acclimates?')
 chownverb = regex(r'yields?\s+')
-timingverb = regex('ready|readies|holds?|interrupts?')
+timingverb = regex('read(y|ies)|holds?|interrupts?')
 activerem = regex('(in)?active')
 reservedverbs = ['is', 'am', 'at', 'to', 'for', 'advanced', 'have', 'has',
     loseverb, moveverb, flowverb, herorem, contestverb, actverb,
