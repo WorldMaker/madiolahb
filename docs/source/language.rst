@@ -98,5 +98,6 @@ Commands
    timing
    acting
    renown
+   charcommands
 
 .. vim: ai spell tw=72
