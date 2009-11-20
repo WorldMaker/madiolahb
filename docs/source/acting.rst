@@ -60,17 +60,61 @@ a roll needs to be made and if so will report the roll's success.
 Losing ego
 ==========
 
-.. todo::
+Sometimes fate conspires to cause character's to lose ego. **[**\ I lose
+*count* ego.\ **]** If Bee remembers the last roll it will helpfully
+double-check your math here.
+
+  **[**\ I lose 2 ego.\ **]**
 
 Moving
 ======
 
+The Bee keeps track of a basic notion of a character's position using an
+integer (x, y) coordinate system. The absolute position can be set with
+the "at" verb: **[**\ I am at *X*, *Y*.\ **]** where *X* and *Y* are
+integers. Whereas relative position changes can be commanded by "move":
+**[**\ I move *Character* to *Count* spots *Direction*.\ **]** The
+object of the move can be omitted, as with the action verbs above.
+Relative movement is compared by the Bee (as best as it can) to a
+remembered roll.
+
+Directions accepted are the abbreviations for everyone's favorite
+compass directions (one of N, S, E, W, NE, NW, SE, or SW). Generally the
+Bee assumes a hex map and the coordinate system should reflect that, for
+instance E and W counts should be multiples of 2.
+
+Synonyms for "spots" includes "spaces" and "paces". The word can also be
+elided entirely.
+
 .. todo::
 
-=======================
-Example for a Full Turn
-=======================
+   This will obviously be an under-powered support until actual maps can
+   be presented... when it will probably warrant a section all to
+   itself.
 
-.. todo::
+==============================
+Example for a Character's Turn
+==============================
+
+Given that Bee has announced that a character has "ticked" to the ready
+spot, the character can start a new turn and then proceed to exert will
+and then announce an action.
+
+  **[**\ I ready. I exert 1 to poise. I act with poise.\ **]**
+
+Upon reading this command sequence the Bee should report the results of
+a dice roll if it is necessary. In this case, the Bee should report a
+guaranteed success of the mundane action, with an expected effect less
+than or equal to 3 and timing less than or equal to 1. The player can
+freely role play what the action was, in non-bracketed text.
+
+  I rushed towards that vending machine...
+
+Following all that warm roleplaying, let Bee know the effects of the
+action, finishing with timing effect on the character itself.
+
+  ...I can't wait to get that nice, cold Root Beer of Righteous
+  Benevolence. **[**\ I move 1 spot NW. I reset to 2.\ **]** I do hope I
+  have enough change.
 
 .. vim: ai spell tw=72
