@@ -20,6 +20,10 @@ inbound_services:
 - xmpp_message
 
 handlers:
+# Main redirect to documentation
+- url: /
+  script: home.py
+
 # Email
 - url: /_ah/mail/.*
   script: mail.py
@@ -33,6 +37,10 @@ handlers:
 # GWave
 - url: /_wave/.*
   script: wave.py
+
+# Documentation
+- url: /docs
+  static_dir: docs/build/html
 
 # Static Files
 - url: /static
