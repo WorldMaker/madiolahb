@@ -1,9 +1,10 @@
 # HCE Bee
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
 
+import os
 import re
 import sys
-sys.path.append('arpeggio.zip')
+sys.path.append(os.path.join(os.path.dirname(__file__), 'arpeggio.zip'))
 
 from arpeggio import *
 from arpeggio import RegExMatch
