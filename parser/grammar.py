@@ -197,13 +197,16 @@ class SetVerb(SemanticAction):
 set.sem = SetVerb()
 
 class VerbOnly(SemanticAction):
+    def __init__(self, verbname):
+        self.verbname = verbname
+
     def first_pass(self, parser, node, nodes):
         n = NonTerminal(node.type, node.position, [])
-        n.nodes = {'verb': node.value}
+        n.nodes = {'verb': self.verbname, 'value': node.value}
         return n
 
-vote.sem = VerbOnly()
-timing.sem = VerbOnly()
+vote.sem = VerbOnly('vote')
+timing.sem = VerbOnly('timing')
 
 class Playing(SemanticAction):
     def first_pass(self, parser, node, nodes):

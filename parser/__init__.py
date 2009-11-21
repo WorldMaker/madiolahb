@@ -1,2 +1,2 @@
 # For convenience
-from grammar import parse
+from grammar import NoMatch, parse

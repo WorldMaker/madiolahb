@@ -79,28 +79,28 @@ Game Flow
 Timing verbs::
 
   >>> sen = parse('Ready.')[0]
-  >>> sen['subject'], sen['verb']
-  (None, 'ready')
+  >>> sen['subject'], sen['verb'], sen['value']
+  (None, 'timing', 'ready')
 
   >>> sen = parse('I ready.')[0]
-  >>> sen['subject'], sen['verb']
-  (Pronoun, 'ready')
+  >>> sen['subject'], sen['verb'], sen['value']
+  (Pronoun, 'timing', 'ready')
 
   >>> sen = parse('He readies.')[0]
-  >>> sen['subject'], sen['verb']
-  (Pronoun, 'readies')
+  >>> sen['subject'], sen['verb'], sen['value']
+  (Pronoun, 'timing', 'readies')
 
   >>> sen = parse('I hold.')[0]
-  >>> sen['subject'], sen['verb']
-  (Pronoun, 'hold')
+  >>> sen['subject'], sen['verb'], sen['value']
+  (Pronoun, 'timing', 'hold')
 
   >>> sen = parse('I interrupt.')[0]
-  >>> sen['subject'], sen['verb']
-  (Pronoun, 'interrupt')
+  >>> sen['subject'], sen['verb'], sen['value']
+  (Pronoun, 'timing', 'interrupt')
 
   >>> sen = parse('The ready-made weapon holder is ready.')[0]
-  >>> sen['subject'], sen['verb']
-  ('the ready-made weapon holder', 'ready')
+  >>> sen['subject'], sen['verb'], sen['value']
+  ('the ready-made weapon holder', 'timing', 'ready')
 
 Exerting influence::
 
@@ -289,25 +289,31 @@ Nominating renown::
 
 Voting::
 
-  >>> parse('I assent.')[0]['verb']
-  'assent'
+  >>> sen = parse('I assent.')[0]
+  >>> sen['verb'], sen['value']
+  ('vote', 'assent')
 
-  >>> parse('I dissent.')[0]['verb']
-  'dissent'
+  >>> sen = parse('I dissent.')[0]
+  >>> sen['verb'], sen['value']
+  ('vote', 'dissent')
 
-  >>> parse('Aye.')[0]['verb']
-  'aye'
+  >>> sen = parse('Aye.')[0]
+  >>> sen['verb'], sen['value']
+  ('vote', 'aye')
 
-  >>> parse('Nay.')[0]['verb']
-  'nay'
+  >>> sen = parse('Nay.')[0]
+  >>> sen['verb'], sen['value']
+  ('vote', 'nay')
 
 Acclimation::
 
-  >>> parse('I acclimate.')[0]['verb']
-  'acclimate'
+  >>> sen = parse('I acclimate.')[0]
+  >>> sen['verb'], sen['value']
+  ('vote', 'acclimate')
 
-  >>> parse('Acclimate.')[0]['verb']
-  'acclimate'
+  >>> sen = parse('Acclimate.')[0]
+  >>> sen['verb'], sen['value']
+  ('vote', 'acclimate')
 
 Character Control
 =================
@@ -360,5 +366,5 @@ As phrase::
 Multiple sentences::
 
   >>> sens = parse('I ready. I hold. I interrupt.')
-  >>> [sen['verb'] for sen in sens]
+  >>> [sen['value'] for sen in sens]
   ['ready', 'hold', 'interrupt']
