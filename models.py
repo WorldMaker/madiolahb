@@ -42,11 +42,11 @@ class Character(db.Model):
     y = db.IntegerProperty(default=0)
 
 class GameMixin(object):
-    def new_char(self, owner, ego, will):
+    def new_char(self, owner, name, **kwargs):
         return Character(parent=self,
             owner=owner,
-            ego=ego,
-            will=will,
+            name=name,
+            **kwargs
         )
 
 class WaveGame(db.Model, GameMixin):
