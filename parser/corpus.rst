@@ -44,19 +44,19 @@ Creating a character::
 Setting a character's professional advancement::
 
   >>> sen = parse('I have advanced to 3 in profession 1.')[0]
-  >>> sen['verb'], sen[1]
+  >>> sen['verb'], sen['prof1']
   ('advanced', 3)
 
   >>> sen = parse('I advanced 3 in my first profession.')[0]
-  >>> sen['verb'], sen[1]
+  >>> sen['verb'], sen['prof1']
   ('advanced', 3)
 
   >>> sen = parse('I advanced 2 in profession 2, 3 in profession 1, and 1 in my third profession.')[0]
-  >>> sen['verb'], sen[1], sen[2], sen[3]
+  >>> sen['verb'], sen['prof1'], sen['prof2'], sen['prof3']
   ('advanced', 3, 2, 1)
 
   >>> sen = parse('Advanced 3 in my first profession.')[0]
-  >>> sen['verb'], sen[1]
+  >>> sen['verb'], sen['prof1']
   ('advanced', 3)
 
 Setting a character's spots::

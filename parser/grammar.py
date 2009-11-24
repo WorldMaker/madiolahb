@@ -237,7 +237,7 @@ profcard.sem = ProfCard()
 class ProfPt(SemanticAction):
     def first_pass(self, parser, node, nodes):
         # Return (prof num, points)
-        return nodes[-1], nodes[0]
+        return 'prof%s' % nodes[-1], nodes[0]
 
 profpt.sem = ProfPt()
 
