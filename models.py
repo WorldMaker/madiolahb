@@ -2,6 +2,10 @@
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
 from google.appengine.ext import db
 
+# These are the spots used by the "has" verb
+SPOTS = ('ego', 'will', 'ego_spot', 'will_spot', 'life', 'earth', 'water',
+    'energy', 'air', 'fire')
+
 class Character(db.Model):
     owner = db.StringProperty(required=True)
     name = db.StringProperty()
