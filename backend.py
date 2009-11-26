@@ -65,9 +65,13 @@ class Commander(object):
     def _char(self, subject=None):
         # Explicit character in the subject or as clause
         if (isinstance(subject, basestring)
-        or isinstance(self.asclause, basestring)):
+        or (isinstance(self.asclause, basestring)
+        and (subject is None or subject.type == 'Pronoun'))):
             charname = subject
-            if not charname:
+            if not charname or not isinstance(charname, basestring):
+                # Try looking up the as clause, but only if no current char
+                if self.char is not None:
+                    return self.char
                 charname = self.asclause
             char = Character.all().ancestor(self.game) \
                 .filter('name =', charname).get()
@@ -88,7 +92,8 @@ class Commander(object):
                 self.char = None
                 self.errors.append("Can't find character named %s" % charname)
         # One-And-Only-One character lookup
-        elif self.char is None:
+        elif (isinstance(subject, Special)
+        and subject.type == 'Addr') or self.char is None:
             addr = self.sender
             if isinstance(subject, Special) and subject.type == 'Addr':
                 addr = subject.value
