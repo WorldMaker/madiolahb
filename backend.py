@@ -46,6 +46,11 @@ class Commander(object):
             status = verb(**sentence)
             if status is not None and not status: return status
 
+    def commit(self):
+        from google.appengine.ext import db
+        db.put(self.updated)
+        self.updated = []
+
     def playing(self, subject=None, name='', **kwargs):
         # Check for an existing character with this name
         exists = Character.all().ancestor(self.game).filter('name =', name) \
