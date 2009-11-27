@@ -29,6 +29,7 @@ class Commander(object):
         self.errors = []
         self.warnings = []
         self.updated = [] # Objects that should be db.put
+        self.commanded = [] # "Accepted" command sentences
 
     def unimplemented_verb(self, verb='', **kwargs):
         self.errors.append('Unimplemented verb "%s"' % verb)
@@ -36,6 +37,7 @@ class Commander(object):
     def command(self, input):
         self.errors = []
         self.warnings = []
+        self.commanded = []
         try:
             sentences = parse(input)
         except NoMatch, e:
@@ -52,6 +54,8 @@ class Commander(object):
             verb = getattr(self, sentence["verb"], self.unimplemented_verb)
             status = verb(**sentence)
             if status is not None and not status: return status
+            else:
+                self.commanded.append(sentence)
 
     def commit(self):
         from google.appengine.ext import db
