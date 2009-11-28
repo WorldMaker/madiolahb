@@ -25,11 +25,10 @@ def advanced(self, subject=None, prof1=None, prof2=None, prof3=None,
     **kwargs):
     if not self._char(subject): return False
 
-    for prof, value in ((self.char.job1, prof1), (self.char.job2, prof2),
-        (self.char.job3, prof3)):
+    for prof, value in (('job1', prof1), ('job2', prof2), ('job3', prof3)):
         if value is not None:
             if in_prof_range(value):
-                prof = value
+                setattr(self.char, prof, value)
                 if self.char not in self.updated:
                     self.updated.append(self.char)
             else:
@@ -42,8 +41,7 @@ def has(self, subject=None, **kwargs):
     for spot in SPOTS:
         if spot in kwargs:
             if in_spot_range[spot](kwargs[spot]):
-                charspot = getattr(self.char, spot)
-                charspot = kwargs[spot]
+                setattr(self.char, spot, kwargs[spot])
                 if self.char not in self.updated:
                     self.updated.append(self.char)
             else:
