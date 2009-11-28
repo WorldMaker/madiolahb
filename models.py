@@ -1,6 +1,7 @@
 # HCE Bee
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
 from google.appengine.ext import db
+from google.appengine.ext.db import polymodel
 
 # These are the spots used by the "has" verb
 SPOTS = ('ego', 'will', 'ego_spot', 'will_spot', 'life', 'earth', 'water',
@@ -45,7 +46,9 @@ class Character(db.Model):
     x = db.IntegerProperty(default=0)
     y = db.IntegerProperty(default=0)
 
-class GameMixin(object):
+class Game(polymodel.PolyModel):
+    hold = db.StringListProperty() # Explicit holding chars
+
     def new_char(self, owner, name, **kwargs):
         return Character(parent=self,
             owner=owner,
@@ -53,15 +56,13 @@ class GameMixin(object):
             **kwargs
         )
 
-class WaveGame(db.Model, GameMixin):
+class WaveGame(Game):
     waveid = db.StringProperty(required=True)
 
-class EmailGame(db.Model, GameMixin):
-    players = db.StringListProperty() # Hmm...
+class EmailGame(Game):
     subject = db.StringProperty(required=True)
 
-class XmppGame(db.Model, GameMixin):
-    players = db.StringListProperty() # Hmm...
+class XmppGame(Game):
     name = db.StringProperty(required=True)
 
 # vim: ai ts=4 sts=4 et sw=4
