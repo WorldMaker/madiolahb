@@ -5,6 +5,7 @@ from parser import NoMatch, parse, Special
 
 # Command imports
 from chardesc import advanced, has, playing
+from timing import _tick, timing
 
 class Commander(object):
     """
@@ -16,6 +17,9 @@ class Commander(object):
     advanced = advanced
     has = has
     playing = playing
+    # Timing commands
+    _tick = _tick
+    timing = timing
 
     def __init__(self, game=None, sender=None):
         """
@@ -109,5 +113,12 @@ class Commander(object):
             else:
                 self.char = chars[0]
         return self.char
+
+    def _active(self):
+        if self.char.name == self.game.active:
+            return True
+        else:
+            self.warnings.append('%s is not currently active' % self.char.name)
+            return False
 
 # vim: ai et ts=4 sts=4 sw=4

@@ -11,6 +11,7 @@ class Character(db.Model):
     owner = db.StringProperty(required=True)
     name = db.StringProperty()
     active = db.BooleanProperty(default=True)
+    waiting = db.StringListProperty() # This char is waiting for these, at t=0
     # Source
     ego = db.IntegerProperty(default=0)
     will = db.IntegerProperty(default=0)
@@ -48,6 +49,11 @@ class Character(db.Model):
 
 class Game(polymodel.PolyModel):
     hold = db.StringListProperty() # Explicit holding chars
+    active = db.StringProperty() # Currently "active" char
+    lastroll = db.IntegerProperty()
+    cureffect = db.IntegerProperty() # Current effect taken by active char
+    curtiming = db.IntegerProperty() # Current timing taken by active char
+    hexmap = db.BooleanProperty(default=True)
 
     def new_char(self, owner, name, **kwargs):
         return Character(parent=self,
