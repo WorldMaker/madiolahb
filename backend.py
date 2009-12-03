@@ -5,7 +5,7 @@ from parser import NoMatch, parse, Special
 
 # Command imports
 from chardesc import advanced, has, playing
-from timing import _tick, timing
+from timing import _crit, set, _tick, timing
 
 class Commander(object):
     """
@@ -18,6 +18,8 @@ class Commander(object):
     has = has
     playing = playing
     # Timing commands
+    _crit = _crit
+    set = set
     _tick = _tick
     timing = timing
 
@@ -32,8 +34,13 @@ class Commander(object):
         self.char = None
         self.errors = []
         self.warnings = []
+        self.gameupdated = False
         self.updated = [] # Objects that should be db.put
+        self.charcache = {}
+        self._activechars = []
         self.commanded = [] # "Accepted" command sentences
+        self.atready = []
+        self.tickselapsed = 0
 
     def unimplemented_verb(self, verb='', **kwargs):
         self.errors.append('Unimplemented verb "%s"' % verb)
@@ -42,6 +49,8 @@ class Commander(object):
         self.errors = []
         self.warnings = []
         self.commanded = []
+        self.atready = []
+        self.tickselapsed = 0
         try:
             sentences = parse(input)
         except NoMatch, e:
@@ -63,8 +72,46 @@ class Commander(object):
 
     def commit(self):
         from google.appengine.ext import db
-        db.put(self.updated)
+        upd = [self.charcache[k] for k in self.updated]
+        if self.gameupdated:
+            upd.insert(0, self.game)
+        db.put(upd)
+        self.gameupdated = False
         self.updated = []
+
+    def _addrchar(self, addr):
+        chars = list(Character.all().ancestor(self.game) \
+            .filter('owner =', addr).fetch(2))
+        if len(chars) != 1:
+            char = None
+            self.warnings.append('%s does not have one and only one character'
+                % addr)
+        else:
+            char = chars[0]
+            if char.key() in self.charcache:
+                return self.charcache[char.key()]
+        return char
+
+    def _namechar(self, charname):
+        # Check for an existing cached copy
+        for char in self.charcache.values():
+            if char.name == charname:
+                return char
+        return Character.all().ancestor(self.game) \
+            .filter('name =', charname).get()
+
+    @property
+    def activechars(self):
+        if not self._activechars:
+            self._activechars = []
+            achars = list(self.game.active_chars)
+            for char in achars:
+                if char.key() in self.charcache:
+                    self._activechars.append(self.charcache[char.key()])
+                else:
+                    self.charcache[char.key()] = char
+                    self._activechars.append(char)
+        return self._activechars
 
     def _char(self, subject=None):
         # Explicit character in the subject or as clause
@@ -77,8 +124,7 @@ class Commander(object):
                 if self.char is not None:
                     return self.char
                 charname = self.asclause
-            char = Character.all().ancestor(self.game) \
-                .filter('name =', charname).get()
+            char = self._namechar(charname)
             if char:
                 if char.owner == self.sender:
                     self.char = char
@@ -104,14 +150,7 @@ class Commander(object):
             elif (isinstance(self.asclause, Special)
             and self.asclause.type == 'Addr'):
                 addr = self.asclause.value
-            chars = list(Character.all().ancestor(self.game)
-                .filter('owner =', addr).fetch(2))
-            if len(chars) != 1:
-                self.char = None
-                self.errors.append('%s does not have one and only one character'
-                    % addr)
-            else:
-                self.char = chars[0]
+            self.char = self._addrchar(addr)
         return self.char
 
     def _active(self):
@@ -120,5 +159,14 @@ class Commander(object):
         else:
             self.warnings.append('%s is not currently active' % self.char.name)
             return False
+
+    def _object(self, object=None):
+        if object is None or (isinstance(object, Special)
+        and object.type == 'Pronoun'):
+            return self.char
+        elif isinstance(object, Special) and object.type == 'Addr':
+            return self._addrchar(object.value)
+        else:
+            return self._namechar(object)
 
 # vim: ai et ts=4 sts=4 sw=4

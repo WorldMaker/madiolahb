@@ -7,11 +7,13 @@ from google.appengine.ext.db import polymodel
 SPOTS = ('ego', 'will', 'ego_spot', 'will_spot', 'life', 'earth', 'water',
     'energy', 'air', 'fire')
 
+INFLUENCES = ('mastery', 'persistence', 'design', 'poise', 'sleight',
+    'charm', 'mind', 'body', 'spirit')
+
 class Character(db.Model):
     owner = db.StringProperty(required=True)
     name = db.StringProperty()
     active = db.BooleanProperty(default=True)
-    waiting = db.StringListProperty() # This char is waiting for these, at t=0
     # Source
     ego = db.IntegerProperty(default=0)
     will = db.IntegerProperty(default=0)
@@ -32,6 +34,7 @@ class Character(db.Model):
     job3 = db.IntegerProperty(default=0)
     # Time Track
     time = db.IntegerProperty(default=0)
+    recovery = db.IntegerProperty(default=0) # 0s and 9s until can move 0 -> 1
     # Mundane Influences
     mastery = db.IntegerProperty(default=0) # life, earth
     persistence = db.IntegerProperty(default=0) # earth, water
@@ -48,12 +51,18 @@ class Character(db.Model):
     y = db.IntegerProperty(default=0)
 
 class Game(polymodel.PolyModel):
-    hold = db.StringListProperty() # Explicit holding chars
-    active = db.StringProperty() # Currently "active" char
+    hold = db.ListProperty(db.Key) # Explicit holding chars
+    # Current "active" char
+    active = db.ReferenceProperty(collection_name='active_in_game_set')
+    lastinfluence = db.StringProperty()
     lastroll = db.IntegerProperty()
     cureffect = db.IntegerProperty() # Current effect taken by active char
     curtiming = db.IntegerProperty() # Current timing taken by active char
     hexmap = db.BooleanProperty(default=True)
+
+    @property
+    def active_chars(self):
+        return Character.all().ancestor(self).filter('active =', True)
 
     def new_char(self, owner, name, **kwargs):
         return Character(parent=self,

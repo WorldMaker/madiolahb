@@ -19,7 +19,9 @@ def playing(self, subject=None, name='', **kwargs):
         elif subject.type == 'Addr':
             owner = subject.value
     self.char = self.game.new_char(owner, name)
-    self.updated.append(self.char)
+    self.char.put() # Get a key for it
+    self.charcache[self.char.key()] = self.char
+    self.updated.append(self.char.key())
 
 def advanced(self, subject=None, prof1=None, prof2=None, prof3=None,
     **kwargs):
@@ -29,8 +31,8 @@ def advanced(self, subject=None, prof1=None, prof2=None, prof3=None,
         if value is not None:
             if in_prof_range(value):
                 setattr(self.char, prof, value)
-                if self.char not in self.updated:
-                    self.updated.append(self.char)
+                if self.char.key() not in self.updated:
+                    self.updated.append(self.char.key())
             else:
                 self.warnings.append('%s is out of range for a profession'
                     % value)
@@ -42,8 +44,8 @@ def has(self, subject=None, **kwargs):
         if spot in kwargs:
             if in_spot_range[spot](kwargs[spot]):
                 setattr(self.char, spot, kwargs[spot])
-                if self.char not in self.updated:
-                    self.updated.append(self.char)
+                if self.char.key() not in self.updated:
+                    self.updated.append(self.char.key())
             else:
                 self.warnings.append('%s is out of range for %s' % (
                     kwargs[spot], spot))
