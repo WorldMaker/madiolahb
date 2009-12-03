@@ -5,7 +5,7 @@ from google.appengine.ext.db import polymodel
 
 # These are the spots used by the "has" verb
 SPOTS = ('ego', 'will', 'ego_spot', 'will_spot', 'life', 'earth', 'water',
-    'energy', 'air', 'fire')
+    'energy', 'air', 'fire', 'will_spent')
 
 INFLUENCES = ('mastery', 'persistence', 'design', 'poise', 'sleight',
     'charm', 'mind', 'body', 'spirit')
@@ -20,6 +20,7 @@ class Character(db.Model):
     # "Drained" Spots
     ego_spot = db.IntegerProperty(default=0)
     will_spot = db.IntegerProperty(default=0)
+    will_spent = db.IntegerProperty(default=0)
     # Elements of Ego
     life = db.IntegerProperty(default=0)
     earth = db.IntegerProperty(default=0)

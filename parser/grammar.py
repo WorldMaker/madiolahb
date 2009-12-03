@@ -19,6 +19,7 @@ def regex(pattern):
 imverb = [('is', 'called'), 'continues', 'ends']
 dir = ['ne', 'nw', 'se', 'sw', 'n', 's', 'e', 'w']
 element = ['life', 'earth', 'water', 'energy', 'air', 'water']
+drained = ['drained', 'dissipated', 'spent']
 influence = ['mastery', 'persistence', 'design', 'poise', 'sleight', 'charm',
     'mind', 'body', 'spirit']
 pronouns = ['i ', 'he ', 'she ', 'it ']
@@ -78,7 +79,7 @@ def profpt():       return num, Optional(['points', 'tokens']), 'in', \
 def advanced():     return Optional(['have', 'has']), 'advanced', \
                         Optional('to'), OneOrMore((profpt, andcomma))
 
-def stat():         return num, [(['ego', 'will'], Optional('drained')),
+def stat():         return num, [(['ego', 'will'], Optional(drained)),
                         (element, Optional('strength'))]
 def has():          return ['have', 'has'], OneOrMore((stat, andcomma))
 
@@ -245,8 +246,13 @@ class Stat(SemanticAction):
     def first_pass(self, parser, node, nodes):
         # Return (stat, points)
         stat = nodes[-1 if len(nodes) < 3 else -2].value
-        if nodes[-1].value == 'drained':
+        if nodes[-1].value == 'drained' or nodes[-1].value == 'dissipated':
             stat += '_spot'
+        elif nodes[-1].value == 'spent':
+            if stat == 'will':
+                stat += '_spent'
+            else:
+                stat += '_spot'
         return stat, nodes[0]
 
 stat.sem = Stat()

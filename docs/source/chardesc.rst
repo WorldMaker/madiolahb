@@ -45,6 +45,7 @@ wheel for a character. The basic forms look like:
   | **[**\ I have *Number* *Element*.\ **]**
   | **[**\ I have *Number* ego drained.\ **]**
   | **[**\ I have *Number* will drained.\ **]**
+  | **[**\ I have *Number* will spent.\ **]**
 
 One or more of these can be combined, "have" will accept a list of forms
 above, optionally separated by a comma and/or "and".
@@ -52,7 +53,9 @@ above, optionally separated by a comma and/or "and".
 "Ego" and "will" refer to ego and will tokens in the source, while the
 "drained" form refers to tokens in the ego and will spaces of the life
 wheel. The drained forms should be rarely used in the event of resetting
-a game or correcting a Bee mistake.
+a game or correcting a Bee mistake. "Dissipated" can be used as a
+synonym of drained, and "spent" is used with will to denote will placed
+upon the ego space on the life wheel.
 
   **[**\ I have 9 ego, 12 will, 3 life, and 3 energy.\ **]**
 
