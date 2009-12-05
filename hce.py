@@ -89,4 +89,7 @@ def other_effected_time(time, timingeffect):
 def is_guaranteed(char, contested, influence, heroic, profession):
     pass
 
+def max_recovery(char):
+    return min(char.energy, 1)
+
 # vim: ai et ts=4 sts=4 sw=4

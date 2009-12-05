@@ -6,7 +6,7 @@ from parser import NoMatch, parse, Special
 # Command imports
 from chardesc import advanced, has, playing
 from timing import _crit, set, _tick, timing
-from acting import act, contest, flow
+from acting import act, contest, flow, lose, recover
 
 class Commander(object):
     """
@@ -27,6 +27,8 @@ class Commander(object):
     act = act
     contest = contest
     flow = flow
+    lose = lose
+    recover = recover
 
     def __init__(self, game=None, sender=None):
         """

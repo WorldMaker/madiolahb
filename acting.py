@@ -1,6 +1,6 @@
 # HCE Bee
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
-from hce import is_guaranteed, GUARANTEED_ROLL, ROLL_EFFECT
+from hce import is_guaranteed, GUARANTEED_ROLL, max_recovery, ROLL_EFFECT
 from model import INFLUENCES
 import random
 
@@ -47,5 +47,52 @@ def contest(self, subject=None, influence=None, heroic=None, profession=None,
         self.game.lastroll = random.randint(0, 9)
     self.game.cureffect, self.game.curtiming = ROLL_EFFECT[self.game.lastroll]
     self.gameupdated = True
+
+def lose(self, subject=None, count=0, **kwargs):
+    if not self._char(subject): return False
+    if not self._active(): return False
+
+    tokens = min(self.char.ego, count)
+    self.char.ego -= tokens
+    self.char.ego_spot += tokens
+    if tokens < count:
+        self.warnings.append('%s had fewer than %s ego left.' % (
+            self.char.name, count))
+    if self.char.ego == 0:
+        self.char.active = False
+        if self.char in self._activechars:
+            self._activechars.remove(self.char)
+        self.warnings.append('%s has passed out.' % self.char.name)
+    if self.char.key() not in self.updated:
+        self.updated.append(self.char.key())
+
+def recover(self, subject=None, count=None, what=None, **kwargs):
+    if not self._char(subject): return False
+    if not self._active(): return False
+
+    mr = max_recovery(self.char)
+    if count is not None and count > mr:
+        self.warnings.append("%s is greater than %s's expected maximum recovery (%s)." % (
+            count, self.char.name, mr)
+    elif count is None:
+        count = mr
+
+    if what is None:
+        tokens = min(self.char.will_spent, count)
+        self.char.will_spent -= tokens
+        self.char.will += tokens
+        if count > tokens:
+            what = 'ego'
+            count -= tokens
+    if what == 'ego':
+        tokens = min(self.char.ego_spot, count)
+        self.char.ego_spot -= tokens
+        self.char.ego += tokens
+    elif what == 'will':
+        tokens = min(self.char.will_spent, count)
+        self.char.will_spent -= tokens
+        self.char.will += tokens
+    if self.char.key() not in self.updated:
+        self.updated.append(self.char.key())
 
 # vim: ai et ts=4 sts=4 sw=4
