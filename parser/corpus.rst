@@ -196,6 +196,24 @@ Losing ego::
   >>> sen['verb'], sen['count']
   ('lose', 3)
 
+Recovering spent will and ego::
+
+  >>> sen = parse('I recover 3.')[0]
+  >>> sen['verb'], sen['count'], sen['what']
+  ('recover', 3, None)
+
+  >>> sen = parse('He recovers 2 ego.')[0]
+  >>> sen['verb'], sen['count'], sen['what']
+  ('recover', 2, 'ego')
+
+  >>> sen = parse('Recover 1 will.')[0]
+  >>> sen['verb'], sen['count'], sen['what']
+  ('recover', 1, 'will')
+
+  >>> sen = parse('Recover.')[0]
+  >>> sen['verb'], sen['count'], sen['what']
+  ('recover', None, None)
+
 Moving the Character
 --------------------
 

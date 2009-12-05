@@ -66,6 +66,21 @@ double-check your math here.
 
   **[**\ I lose 2 ego.\ **]**
 
+Recovering spent ego and will
+=============================
+
+Given a skein defined system for healing or resting, a character can
+recover spent ego and will with **[**\ I recover *count* ego.\ **]**.
+"Will" can be substituted for ego. If neither "will" nor "ego" is
+provided, the Bee will try first recovering will and then recovering
+ego. Additionally, the count and the type can both be omitted and the
+Bee will recover the default flow amount from first will and then ego.
+
+  | **[**\ I recover 3 ego.\ **]**
+  | **[**\ I recover 2 will.\ **]**
+  | **[**\ I recover 4.\ **]**
+  | **[**\ I recover.\ **]**
+
 Moving
 ======
 

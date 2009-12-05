@@ -39,10 +39,11 @@ voteverb = regex('assents?|aye|dissents?|nay|acclimates?')
 chownverb = regex(r'yields?\s+')
 timingverb = regex('read(y|ies)|holds?|interrupts?')
 activerem = regex('(in)?active')
+recoververb = regex('recovers?')
 reservedverbs = ['is', 'am', 'at', 'to', 'for', 'advanced', 'have', 'has',
     loseverb, moveverb, flowverb, herorem, contestverb, actverb,
     setverb, reknownverb, voteverb, timingverb, chownverb, activerem,
-    'in', 'with']
+    recoververb, 'in', 'with']
 
 def num():          return regex(r'\d+')
 def pronoun():      return pronouns
@@ -98,6 +99,9 @@ def set():          return setverb, Optional(refid), \
 
 def lose():         return loseverb, num, Optional('ego')
 
+def recover():      return recoververb, Optional((num,
+                        Optional(['ego', 'will'])))
+
 def amat():         return 'at', num, Optional(','), num
 
 def move():         return moveverb, Optional(refid), 'to', num, \
@@ -120,7 +124,7 @@ def deactivate():   return activerem
 def isphrase():     return Optional(['am', 'is']), [timing, deactivate, amat,
                         playing]
 def phrase():       return [advanced, has, flow, contest, act, move,
-                        set, lose, renown, vote, chown, isphrase]
+                        set, lose, recover, renown, vote, chown, isphrase]
 
 def asentence():    return Optional(asphrase), Optional(id), phrase
 def sentence():     return [imsentence, asentence], '.'
@@ -314,6 +318,19 @@ class Lose(SemanticAction):
         return node
 
 lose.sem = Lose()
+
+class Recover(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        sd = {'verb': 'recover', 'count': None, 'what': None}
+        if isinstance(nodes[-1], int):
+            sd['count'] = nodes[-1]
+        elif len(nodes) > 1 and isinstance(nodes[-2], int):
+            sd['count'] = nodes[-2]
+            sd['what'] = nodes[-1].value
+        node.nodes = sd
+        return node
+
+recover.sem = Recover()
 
 class AmAt(SemanticAction):
     def first_pass(self, parser, node, nodes):
