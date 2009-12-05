@@ -7,6 +7,7 @@ from parser import NoMatch, parse, Special
 from chardesc import advanced, has, playing
 from timing import _crit, set, _tick, timing
 from acting import act, contest, flow, lose, recover
+from movement import at, move
 
 class Commander(object):
     """
@@ -29,6 +30,9 @@ class Commander(object):
     flow = flow
     lose = lose
     recover = recover
+    # Movement commands
+    at = at
+    move = move
 
     def __init__(self, game=None, sender=None):
         """
