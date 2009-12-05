@@ -35,6 +35,14 @@ ROLL_EFFECT = {
     9: (6, 6),
 }
 
+# (Heroic, Contested) -> (Will Needed, Will to Guarantee)
+ACTION_WILL = {
+    (False, False): (0, 1),
+    (False, True): (1, 3),
+    (True, False): (2, 5),
+    (True, True): (3, 7),
+}
+
 # Professions range between 0 and 3 tokens
 in_prof_range = lambda x: x >= 0 and x <= 3
 
@@ -86,8 +94,10 @@ def other_effected_time(time, timingeffect):
     delta = math.abs(totaltime - actualtime)
     return actualtime, delta
 
-def is_guaranteed(char, contested, influence, heroic, profession):
-    pass
+def check_action(char, contested, influence, heroic, profession):
+    will, gua = ACTION_WILL[heroic, contested]
+    avail = getattr(char, influence, 0) + getattr(char, 'job' + profession, 0)
+    return avail >= will, avail >= gua
 
 def max_recovery(char):
     return min(char.energy, 1)

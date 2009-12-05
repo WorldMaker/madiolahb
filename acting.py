@@ -1,6 +1,7 @@
 # HCE Bee
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
-from hce import is_guaranteed, GUARANTEED_ROLL, max_recovery, ROLL_EFFECT
+from hce import check_action, GUARANTEED_ROLL, max_influence, max_recovery, \
+    ROLL_EFFECT
 from model import INFLUENCES
 import random
 
@@ -26,10 +27,24 @@ def act(self, subject=None, influence=None, heroic=None, profession=None,
     if not self._active(): return False
 
     self.game.lastinfluence = influence
-    if is_guaranteed(self.char, False, influence, heroic, profession):
+    cando, is_guaranteed = check_action(self.char, False, influence, heroic,
+        profession)
+    if not cando:
+        self.errors.append('%s does not have enough will exerted to perform.' %
+            self.char.name)
+        return
+    if is_guaranteed:
         self.game.lastroll = GUARANTEED_ROLL
     else:
         self.game.lastroll = random.randint(0, 9)
+    inf = getattr(self.char, influence)
+    maxinf = max_influence(self.char, influence)
+    if inf > maxinf:
+        # Excess influence is "spent"
+        setattr(self.char, influence, maxinf)
+        self.char.will_spent += maxinf - inf
+        if self.char.key() not in self.updated:
+            self.updated.append(self.char.key())
     self.game.cureffect, self.game.curtiming = ROLL_EFFECT[self.game.lastroll]
     self.gameupdated = True
 
@@ -41,10 +56,24 @@ def contest(self, subject=None, influence=None, heroic=None, profession=None,
     # TODO: Use the object, for potential defense
 
     self.game.lastinfluence = influence
-    if is_guaranteed(self.char, True, influence, heroic, profession):
+    cando, is_guaranteed = check_action(self.char, True, influence, heroic,
+        profession)
+    if not cando:
+        self.errors.append('%s does not have enough will exerted to perform.' %
+            self.char.name)
+        return
+    if is_guaranteed:
         self.game.lastroll = GUARANTEED_ROLL
     else:
         self.game.lastroll = random.randint(0, 9)
+    inf = getattr(self.char, influence)
+    maxinf = max_influence(self.char, influence)
+    if inf > maxinf:
+        # Excess influence is "spent"
+        setattr(self.char, influence, maxinf)
+        self.char.will_spent += maxinf - inf
+        if self.char.key() not in self.updated:
+            self.updated.append(self.char.key())
     self.game.cureffect, self.game.curtiming = ROLL_EFFECT[self.game.lastroll]
     self.gameupdated = True
 
