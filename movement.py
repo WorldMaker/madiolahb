@@ -48,6 +48,8 @@ def move(self, subject=None, object=None, count=0, dir=None, **kwargs):
             count)
         return
 
+    # TODO: Check the effect and warn
+
     self.char.x, self.char.y = nextpos(self.game.hexmap,
         self.char.x,
         self.char.y,
