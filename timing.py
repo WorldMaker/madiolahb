@@ -17,6 +17,10 @@ def _tick(self):
         self.gameupdated = True
     if self.game.active:
         self.game.active = None
+        self.game.lastinfluence = None
+        self.game.lastroll = None
+        self.game.cureffect = None
+        self.game.curtiming = None
         self.gameupdated = True
     chars = self.activechars
     self.atready = [char for char in chars if char.time == TIME_READY]
