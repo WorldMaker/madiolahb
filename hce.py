@@ -8,6 +8,7 @@ This is a module for HCE-specific domain knowledge.
 """
 
 TIME_READY = 9
+GUARANTEED_ROLL = 6
 
 INFLUENCE_ELEMENTS = {
     'body': ('earth', 'air'),
@@ -19,6 +20,19 @@ INFLUENCE_ELEMENTS = {
     'poise': ('energy', 'air'),
     'sleight': ('air', 'fire'),
     'charm': ('fire', 'life'),
+}
+
+ROLL_EFFECT = {
+    0: (-5, -6),
+    1: (-4, -3),
+    2: (-3, -2),
+    3: (0, -1),
+    4: (0, 0),
+    5: (0, 1),
+    6: (3, 1),
+    7: (4, 2),
+    8: (5, 3),
+    9: (6, 6),
 }
 
 # Professions range between 0 and 3 tokens
@@ -71,5 +85,8 @@ def other_effected_time(time, timingeffect):
     actualtime = min(0, max(7, totaltime))
     delta = math.abs(totaltime - actualtime)
     return actualtime, delta
+
+def is_guaranteed(char, contested, influence, heroic, profession):
+    pass
 
 # vim: ai et ts=4 sts=4 sw=4
