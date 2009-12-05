@@ -9,6 +9,7 @@ from timing import _crit, set, _tick, timing
 from acting import act, contest, flow, lose, recover
 from movement import at, move
 from renown import renown, vote
+from charcommands import activate, chown, deactivate
 
 class Commander(object):
     """
@@ -37,6 +38,10 @@ class Commander(object):
     # Renown commands
     renown = renown
     vote = vote
+    # Character meta commands
+    activate = activate
+    chown = chown
+    deactivate = deactivate
 
     def __init__(self, game=None, sender=None):
         """
