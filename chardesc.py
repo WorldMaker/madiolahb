@@ -18,6 +18,9 @@ def playing(self, subject=None, name='', **kwargs):
             self.warnings.append('The subject of "is playing" should be a player.')
         elif subject.type == 'Addr':
             owner = subject.value
+    if owner not in self.game.players:
+        self.game.players.append(owner)
+        self.gameupdated = True
     self.char = self.game.new_char(owner, name)
     self.char.put() # Get a key for it
     self.charcache[self.char.key()] = self.char

@@ -8,6 +8,7 @@ from chardesc import advanced, has, playing
 from timing import _crit, set, _tick, timing
 from acting import act, contest, flow, lose, recover
 from movement import at, move
+from renown import renown, vote
 
 class Commander(object):
     """
@@ -33,6 +34,9 @@ class Commander(object):
     # Movement commands
     at = at
     move = move
+    # Renown commands
+    renown = renown
+    vote = vote
 
     def __init__(self, game=None, sender=None):
         """
