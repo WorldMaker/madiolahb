@@ -9,7 +9,7 @@ def flow(self, subject=None, **kwargs):
     if not self._char(subject): return False
     if not self._active(): return False
 
-    for inf in INFLUENCE:
+    for inf in INFLUENCES:
         if inf in kwargs:
             if self.char.will < kwargs[inf]:
                 self.warnings.append('Not enough will to move %s to %s' % (
@@ -102,7 +102,7 @@ def recover(self, subject=None, count=None, what=None, **kwargs):
     mr = max_recovery(self.char)
     if count is not None and count > mr:
         self.warnings.append("%s is greater than %s's expected maximum recovery (%s)." % (
-            count, self.char.name, mr)
+            count, self.char.name, mr))
     elif count is None:
         count = mr
 
