@@ -19,6 +19,9 @@ def renown(self, subject=None, object=None, influence=None, count=0, **kwargs):
 
 def vote(self, subject=None, value='', **kwargs):
     # Subject is ignored -- always sender
+    if not self.game.renownvote:
+        self.errors.append('No vote in progress.')
+        return
     if self.sender not in self.game.players:
         self.errors.append('%s is not playing and has no vote.' % self.sender)
         return
