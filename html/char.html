@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}{{ char.name }} &mdash; HCE Character{% endblock %}
+
+{% block content %}
+<h1>{{ char.name }}</h1>
+
+<p><a href="/game/{{ char.parent_key }}">This character's game</a></p>
+
+<table>
+	<tr>
+		<th>Property</th>	<th>Value</th>
+	</tr>
+	<tr>
+		<th>Active</th>		<td>{{ char.active|yesno }}</td>
+	</tr>
+	<tr>
+		<th>Inherent Ego</th>	<td>{{ char.ego }}</td>
+	</tr>
+	<tr>
+		<th>Inherent Will</th>  <td>{{ char.will }}</td>
+	</tr>
+	<tr>
+		<th>Disappated Will</th><td>{{ char.will_spot }}</td>
+	</tr>
+	<tr>
+		<th>Spent Ego</th>	<td>{{ char.ego_spot }}</td>
+	</tr>
+	<tr>
+		<th>Spent Will</th>	<td>{{ char.will_spent }}</td>
+	</tr>
+	<tr>
+		<th>Life</th>		<td>{{ char.life }}</td>
+	</tr>
+	<tr>
+		<th>Earth</th>		<td>{{ char.earth }}</td>
+	</tr>
+	<tr>
+		<th>Water</th>		<td>{{ char.water }}</td>
+	</tr>
+	<tr>
+		<th>Energy</th>		<td>{{ char.energy }}</td>
+	</tr>
+	<tr>
+		<th>Air</th>		<td>{{ char.air }}</td>
+	</tr>
+	<tr>
+		<th>Fire</th>		<td>{{ char.fire }}</td>
+	</tr>
+	<tr>
+		<th>Profession 1</th>	<td>{{ char.job1 }}</td>
+	</tr>
+	<tr>
+		<th>Profession 2</th>	<td>{{ char.job2 }}</td>
+	</tr>
+	<tr>
+		<th>Profession 3</th>	<td>{{ char.job3 }}</td>
+	</tr>
+	<tr>
+		<th>Time</th>		<td>{{ char.time }}</td>
+	</tr>
+	<tr>
+		<th>Recovery Count</th>	<td>{{ char.recovery }}</td>
+	</tr>
+	<tr>
+		<th>Mastery</th>	<td>{{ char.mastery }}</td>
+	</tr>
+	<tr>
+		<th>Persistence</th>	<td>{{ char.persistence }}</td>
+	</tr>
+	<tr>
+		<th>Design</th>		<td>{{ char.design }}</td>
+	</tr>
+	<tr>
+		<th>Poise</th>		<td>{{ char.poise }}</td>
+	</tr>
+	<tr>
+		<th>Sleight</th>	<td>{{ char.sleight }}</td>
+	</tr>
+	<tr>
+		<th>Charm</th>		<td>{{ char.charm }}</td>
+	</tr>
+	<tr>
+		<th>Mind</th>		<td>{{ char.mind }}</td>
+	</tr>
+	<tr>
+		<th>Body</th>		<td>{{ char.body }}</td>
+	</tr>
+	<tr>
+		<th>Spirit</th>		<td>{{ char.spirit }}</td>
+	</tr>
+	<tr>
+		<th>Map Position</th>	<td>{{ char.x }}, {{ char.y }}</td>
+	</tr>
+</table>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}HCE Game 
+{% ifequal game.class_name "WaveGame" %}by Wave{% endifequal %}
+{% ifequal game.class_name "EmailGame" %}by Email{% endifequal %}
+{% ifequal game.class_name "XmppGame" %}by IM{% endifequal %}
+{% endblock %}
+
+{% block content %}
+<h1>HCE Game
+{% ifequal game.class_name "WaveGame" %}by Wave{% endifequal %}
+{% ifequal game.class_name "EmailGame" %}by Email{% endifequal %}
+{% ifequal game.class_name "XmppGame" %}by IM{% endifequal %}</h1>
+
+<dl>
+	<dt>Game Type</dt>
+	{% ifequal game.class_name "WaveGame" %}
+	<dd>Wave: {{ game.waveid }}</dd>
+	{% endifequal %}
+	{% ifequal game.class_name "EmailGame" %}
+	<dd>Email: {{ game.subject }}</dd>
+	{% endifequal %}
+	{% ifequal game.class_name "XmppGame" %}
+	<dd>IM: {{ game.name }}</dd>
+	{% endifequal %}
+
+	<dt>Players</dt>
+	{% for player in game.players %}
+	<dd>{{ player }}</dd>
+	{% endfor %}
+
+	<dt>Characters Currently Holding</dt>
+	{% for char in game.hold %}
+	<dd><a href="/char/{{ char.key }}">{{ char.name }}</a></dd>
+	{% endfor %}
+
+	<dt>Currently Playing Character</dt>
+	<dd><a href="/char/{{ game.active.key }}">{{ game.active.name }}</a></dd>
+
+	<dt>Last Influence Acted</dt>
+	<dd>{{ game.lastinfluence }}</dd>
+
+	<dt>Last Roll</dt>
+	<dd>{{ game.lastroll }}</dd> {# TODO: Rich formatting #}
+
+	<dt>Current Remaining Effect</dt>
+	<dd>{{ game.cureffect }}</dd>
+
+	<dt>Current Remaining Timing</dt>
+	<dd>{{ game.curtiming }}</dd>
+
+	{% if game.renownvote %}
+	<dt>Renown Nomination</dt>
+	<dd><a href="/char/{{ game.renownnom.key }}">{{ game.renownnom.name }}</a> was nominated for {{ game.renowncount }} token of {{ game.renowninf }} renown.</dd>
+
+	<dt>Renown Ayes</dt>
+	{% for player in game.renownaye %}
+	<dd>{{ player }}</dd>
+	{% endfor %}
+
+	<dt>Renown Nays</dt>
+	{% for player in game.renownnay %}
+	<dd>{{ player }}</dd>
+	{% endfor %}
+	{% endif %}
+
+	<dt>Hexmap</dt>
+	<dd>{{ game.hexmap|yesno }}</dd>
+
+	<dt>Active Characters</dt>
+	{% for char in game.active_chars %}
+	<dd><a href="/char/{{ char.key }}">{{ char.name }}</a></dd>
+	{% endfor %}
+</dl>
+{% endblock %}

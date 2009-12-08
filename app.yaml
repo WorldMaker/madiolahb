@@ -24,6 +24,10 @@ handlers:
 - url: /
   script: home.py
 
+# Stats pages
+- url: /(game|char)/.*
+  script: stats.py
+
 # Email
 - url: /_ah/mail/.*
   script: mail.py
