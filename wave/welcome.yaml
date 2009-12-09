@@ -1,0 +1,13 @@
+- "Hi, I'm the Bee and I'll be your choreographer for the HCE by Wave.
+  For your reference, here's "
+- [my dashboard for your game,
+  link/manual: "http://hce-bee.appspot.com/game/{{ game.key }}"]
+- " and "
+- [my instruction manual,
+  link/manual: "http://hce-bee.appspot.com/"]
+- ".\n\n"
+- ["Privacy note: ", style/fontWeight: bold]
+- "Although that URL looks like it is filled with random junk, it is not
+  secure in any manner and my webpages are publicly accessible.\n\n"
+- ["Alpha note: ", style/fontWeight: bold]
+- "Note that I'm in early alpha testing and may have bugs. Sorry."

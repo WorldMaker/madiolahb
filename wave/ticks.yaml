@@ -1,0 +1,10 @@
+- ["{{ ticks }}\n\n", style/fontWeight: bold]
+- "The following characters have reached ready:\n\n"
+{% for char in atready %}
+- ["* {{ char.name }}",
+  link/manual: "http://hce-bee.appspot.com/char/{{ char.key }}"]
+{% ifequal char.poise maxpoise %}
+- " (Highest Poise)"
+{% endifequal %}
+- "\n"
+{% endfor %}
