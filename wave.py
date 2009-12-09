@@ -9,7 +9,7 @@ import waml
 def OnBlipSubmitted(properties, context):
     root_wavelet = context.GetRootWavelet()
     waveid = root_wavelet.GetWaveId()
-    game = WaveGame.all(waveid=waveid).get()
+    game = WaveGame.all.filter('waveid =', waveid).get()
     if not game: return
     blip = context.GetBlipById(properties['blipId'])
     com = Commander(game, blip.GetCreator())
@@ -43,7 +43,7 @@ def OnBlipSubmitted(properties, context):
 def OnRobotAdded(properties, context):
     root_wavelet = context.GetRootWavelet()
     waveid = root_wavelet.GetWaveId()
-    if WaveGame.all(waveid=waveid).count(1) > 0:
+    if WaveGame.all().filter('waveid =', waveid).count(1) > 0:
         return
     game = WaveGame(waveid=waveid)
     game.put()
