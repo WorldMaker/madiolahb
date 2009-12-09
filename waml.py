@@ -13,8 +13,9 @@ def append_waml(doc, filename, context={}):
         if isinstance(tok, list):
             doc.AppendText(tok[0])
             end = pos + len(tok[0])
-            for key, value in tok[1]:
-                doc.SetAnnotation(Range(pos, end), key, value)
+            if isinstance(tok[1], dict):
+                for key, value in tok[1].items():
+                    doc.SetAnnotation(Range(pos, end), key, value)
             pos = end
         # TODO: Element insertion
         elif isinstance(tok, basestring):
