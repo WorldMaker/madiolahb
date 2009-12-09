@@ -2,7 +2,7 @@
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
 from hce import check_action, GUARANTEED_ROLL, max_influence, max_recovery, \
     ROLL_EFFECT
-from model import INFLUENCES
+from models import INFLUENCES
 import random
 
 def flow(self, subject=None, **kwargs):
