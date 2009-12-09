@@ -23,7 +23,7 @@ def OnBlipSubmitted(properties, context):
             doc.SetAnnotation(Range(match.start(), match.end()), 
                 'style/fontStyle', 'italic')
         if com.errors or com.warnings:
-            waml.append_waml(doc.InsertInlineBlip(match.end()).GetDocument(),
+            waml.append_waml(doc.InsertInlineBlip(match.end()-2).GetDocument(),
                 'wave/errors.yaml',
                 {'errors': com.errors, 'warnings': com.warnings},
             )
