@@ -120,8 +120,10 @@ class Commander(object):
         for char in self.charcache.values():
             if char.name == charname:
                 return char
-        return Character.all().ancestor(self.game) \
+        char = Character.all().ancestor(self.game) \
             .filter('name =', charname).get()
+        self.charcache[char.key()] = char
+        return char
 
     @property
     def activechars(self):
