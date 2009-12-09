@@ -79,7 +79,7 @@ class Commander(object):
         except NoMatch, e:
             self.errors.append('While parsing: expected %s at position %s'
                 % (e.value, e.parser.pos_to_linecol(e.position)))
-            return
+            return False
         for sentence in sentences:
             if not sentence["imsentence"] and not self.game:
                 self.errors.append('Not in a game.')

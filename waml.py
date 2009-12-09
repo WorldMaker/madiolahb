@@ -8,6 +8,7 @@ def append_waml(doc, filename, context={}):
     tmpl = yaml.load(template.render(filename, context))
 
     pos = len(doc.GetText()) + 1 # Why are ranges 1-based?
+    annots = []
 
     for tok in tmpl:
         if isinstance(tok, list):
@@ -15,12 +16,14 @@ def append_waml(doc, filename, context={}):
             end = pos + len(tok[0])
             if isinstance(tok[1], dict):
                 for key, value in tok[1].items():
-                    doc.SetAnnotation(Range(pos, end), key, value)
+                    annots.append((Range(pos, end), key, value))
             pos = end
         # TODO: Element insertion
         elif isinstance(tok, basestring):
             doc.AppendText(tok)
             pos += len(tok)
         space = True
+    for annot in annots:
+        doc.SetAnnotation(*annot)
 
 #vim: ai et ts=4 sts=4 sw=4

@@ -9,21 +9,21 @@ import waml
 def OnBlipSubmitted(properties, context):
     root_wavelet = context.GetRootWavelet()
     waveid = root_wavelet.GetWaveId()
-    game = WaveGame.all.filter('waveid =', waveid).get()
+    game = WaveGame.all().filter('waveid =', waveid).get()
     if not game: return
     blip = context.GetBlipById(properties['blipId'])
     com = Commander(game, blip.GetCreator())
     doc = blip.GetDocument()
     for match in COMMAND_RE.finditer(doc.GetText()):
         result = com.command(match.group('commands'))
-        if result != False:
+        if result is not False:
             # Swap brackets for parens and italicize to mark the command read
-            doc.SetTextInRange(Range(match.start() + 1, match.start() + 2), '(')
-            doc.SetTextInRange(Range(match.end(), match.end() + 1), ')')
-            doc.SetAnnotation(Range(match.start() + 1, match.end() + 1), 
+            doc.SetTextInRange(Range(match.start(), match.start() + 1), '(')
+            doc.SetTextInRange(Range(match.end() - 1, match.end()), ')')
+            doc.SetAnnotation(Range(match.start(), match.end()), 
                 'style/fontStyle', 'italic')
         if com.errors or com.warnings:
-            waml.append_waml(doc.InsertInlineBlip(match.end()+1).GetDocument(),
+            waml.append_waml(doc.InsertInlineBlip(match.end()).GetDocument(),
                 'wave/errors.yaml',
                 {'errors': com.errors, 'warnings': com.warnings},
             )
