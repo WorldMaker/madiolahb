@@ -1,14 +1,44 @@
-from google.appengine.webapp import template
-from waveapi import events
-from waveapi import model
-from waveapi import robot
+# HCE Bee
+# Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
+from waveapi import events, robot
+from waveapi.document import Range
+from backend import COMMAND_RE, Commander
 from models import WaveGame
+import waml
 
 def OnBlipSubmitted(properties, context):
     root_wavelet = context.GetRootWavelet()
     waveid = root_wavelet.GetWaveId()
+    game = WaveGame.all(waveid=waveid).get()
+    if not game: return
     blip = context.GetBlipById(properties['blipId'])
-
+    com = Commander(game, blip.GetCreator())
+    doc = blip.GetDocument()
+    for match in COMMAND_RE.finditer(doc.GetText()):
+        result = com.command(match.group('commands'))
+        if result != False:
+            # Swap brackets for parens and italicize to mark the command read
+            doc.SetTextInRange(Range(match.start(), match.start() + 1), '(')
+            doc.SetTextInRange(Range(match.end() - 1, match.end()), ')')
+            doc.SetAnnotation(Range(match.start(), match.end()), 
+                'style/fontStyle', 'italic')
+        if com.errors or com.warnings:
+            waml.append_waml(doc.InsertInlineBlip(match.end()).GetDocument(),
+                'wave/errors.yaml',
+                {'errors': com.errors, 'warnings': com.warnings},
+            )
+        if com.tickselapsed:
+            ticks = ''
+            if com.tickselapsed <= 3:
+                ticks = ' '.join(['Tick.'] * com.tickselapsed)
+            else:
+                ticks = '%s Ticks.' % com.tickselapsed
+            waml.append_waml(root_wavelet.CreateBlip().GetDocument(),
+                'wave/ticks.yaml',
+                {'ticks': ticks, 'atready': com.atready, 
+                    'maxpoise': max(char.poise for char in com.atready)},
+            )
+    com.commit()
 
 def OnRobotAdded(properties, context):
     root_wavelet = context.GetRootWavelet()
@@ -17,8 +47,10 @@ def OnRobotAdded(properties, context):
         return
     game = WaveGame(waveid=waveid)
     game.put()
-    root_wavelet.CreateBlip().GetDocument().SetText(
-        template.render('wave/welcome.txt', {'game': game}))
+    waml.append_waml(root_wavelet.CreateBlip().GetDocument(),
+        'wave/welcome.yaml',
+        {'game': game},
+    )
 
 if __name__ == '__main__':
     myRobot = robot.Robot('hce-bee',

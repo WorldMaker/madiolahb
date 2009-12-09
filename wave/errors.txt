@@ -1,7 +1,0 @@
-{% for error in errors %}
-ERROR: {{ error }}
-
-{% endfor %}{% for warn in warnings %}
-WARNING: {{ warn }}
-
-{% endfor %}

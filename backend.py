@@ -2,6 +2,9 @@
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
 from models import Character
 from parser import NoMatch, parse, Special
+import re
+
+COMMAND_RE = re.compile(r'\[\s*(?P<commands>[^\]]+\.)\s*\]')
 
 # Command imports
 from chardesc import advanced, has, playing

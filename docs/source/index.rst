@@ -21,6 +21,7 @@ Contents:
 .. toctree::
    :maxdepth: 3
 
+   playing
    quickref
    language
 
