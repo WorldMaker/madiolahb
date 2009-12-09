@@ -103,16 +103,23 @@ class Commander(object):
         self.updated = []
 
     def _addrchar(self, addr):
-        chars = list(Character.all().ancestor(self.game) \
-            .filter('owner =', addr).fetch(2))
-        if len(chars) != 1:
+        # Check for an existing cached copy
+        keys = []
+        for key, char in self.charcache.items():
+            if char.owner == addr:
+                keys.append(key)
+        if not keys:
+            keys = list(Character.all(keys_only=True).ancestor(self.game) \
+                .filter('owner =', addr).fetch(2))
+        if len(keys) != 1:
             char = None
             self.warnings.append('%s does not have one and only one character'
                 % addr)
-        else:
-            char = chars[0]
-            if char.key() in self.charcache:
-                return self.charcache[char.key()]
+            return
+        if keys[0] in self.charcache:
+            return self.charcache[keys[0]]
+        char = Character.get(keys[0])
+        self.charcache[keys[0]] = char
         return char
 
     def _namechar(self, charname):
