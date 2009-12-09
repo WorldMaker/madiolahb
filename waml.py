@@ -34,6 +34,7 @@ def append_waml(doc, filename, context={}):
                 etype = tok.pop('element_type')
                 name = tok.pop('name')
                 doc.AppendElement(FormElement(etype, name, **tok))
+            pos += 1 # These elements take up a position?
         else:
             tok = str(tok)
             doc.AppendText(tok)
