@@ -7,7 +7,7 @@ import yaml
 def append_waml(doc, filename, context={}):
     tmpl = yaml.load(template.render(filename, context))
 
-    pos = len(doc.GetText())
+    pos = len(doc.GetText()) + 1 # Why are ranges 1-based?
 
     for tok in tmpl:
         if isinstance(tok, list):

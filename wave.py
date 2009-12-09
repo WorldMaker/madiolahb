@@ -18,12 +18,12 @@ def OnBlipSubmitted(properties, context):
         result = com.command(match.group('commands'))
         if result != False:
             # Swap brackets for parens and italicize to mark the command read
-            doc.SetTextInRange(Range(match.start(), match.start() + 1), '(')
-            doc.SetTextInRange(Range(match.end() - 1, match.end()), ')')
-            doc.SetAnnotation(Range(match.start(), match.end()), 
+            doc.SetTextInRange(Range(match.start() + 1, match.start() + 2), '(')
+            doc.SetTextInRange(Range(match.end(), match.end() + 1), ')')
+            doc.SetAnnotation(Range(match.start() + 1, match.end() + 1), 
                 'style/fontStyle', 'italic')
         if com.errors or com.warnings:
-            waml.append_waml(doc.InsertInlineBlip(match.end()).GetDocument(),
+            waml.append_waml(doc.InsertInlineBlip(match.end()+1).GetDocument(),
                 'wave/errors.yaml',
                 {'errors': com.errors, 'warnings': com.warnings},
             )
