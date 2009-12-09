@@ -3,11 +3,11 @@
   type: image
   url: "http://hce-bee.appspot.com/static/error.png"
 - ["Error:", {style/color: red, style/fontWeight: bold}]
-- " {{ error|escapejs }}\n"
+- " {{ error|escapeyaml }}\n"
 {% endfor %}{% for warn in warnings %}
 -
   type: image
   url: "http://hce-bee.appspot.com/static/warning.png"
 - ["Warning:", {style/color: orange, style/fontWeight: bold}]
-- " {{ warn|escapejs }}\n"
+- " {{ warn|escapeyaml }}\n"
 {% endfor %}

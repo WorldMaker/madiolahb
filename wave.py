@@ -1,8 +1,6 @@
 # HCE Bee
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
-from google.appengine.dist import use_library
-use_library('django', '1.0')
-
+from google.appengine.ext.webapp import template
 from waveapi import events, robot
 from waveapi.document import Range
 from backend import COMMAND_RE, Commander
@@ -56,6 +54,7 @@ def OnRobotAdded(properties, context):
     )
 
 if __name__ == '__main__':
+    template.register_template_library('templatetags')
     myRobot = robot.Robot('hce-bee',
         image_url='http://hce-bee.appspot.com/static/logo.jpg',
         version='1',
