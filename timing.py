@@ -22,11 +22,13 @@ def _tick(self):
         self.game.cureffect = None
         self.game.curtiming = None
         self.gameupdated = True
-    chars = self.activechars
-    self.atready = [char for char in chars if char.time == TIME_READY]
+    self.atready = []
+    for char in self.activechars:
+        if char.time == TIME_READY:
+            self.atready.append(char)
     while not self.atready:
         self.tickselapsed += 1
-        for char in chars:
+        for char in self.activechars:
             char.time = tick(char.time)
             if char.time == 0 and not char.recovery:
                 # The char is no longer waiting for anyone else to 0/ready
@@ -38,7 +40,7 @@ def _tick(self):
                 char.will_spot = exerted
                 for inf in INFLUENCES:
                     setattr(char, inf, 0)
-    for char in chars:
+    for char in self.activechars:
         # Remove newly readied characters from a char's waiting list
         # ASSERT: It shouldn't be possible for multiple timesteps to occur?
         if char.time == 0:
@@ -115,8 +117,10 @@ def set(self, subject=None, object=None, time=None, **kwargs):
     object.time = time
 
     if time == 0: # Set the recovery counter
-        object.recovery = sum(1 for char in self.activechars if char.time != 0
-            and char.time != TIME_READY)
+        object.recovery = 0
+        for char in self.activechars:
+            if char.time != 0 and char.time != TIME_READY:
+                object.recovery += 1
 
     if object == self.char:
         self._tick()
