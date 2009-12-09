@@ -8,7 +8,7 @@ COMMAND_RE = re.compile(r'\[\s*(?P<commands>[^\]]+\.)\s*\]')
 
 # Command imports
 from chardesc import advanced, has, playing
-from timing import _crit, set, _tick, timing
+from timecommands import _crit, set, _tick, timing
 from acting import act, contest, flow, lose, recover
 from movement import at, move
 from renown import renown, vote
