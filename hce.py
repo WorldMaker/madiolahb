@@ -71,14 +71,14 @@ def max_influence(char, influence):
     given influence.
     """
     ele0, ele1 = INFLUENCE_ELEMENTS[influence]
-    return getattr(char, ele0, 0) + getattr(char, ele1, 0)
+    return min(1, getattr(char, ele0, 0) + getattr(char, ele1, 0))
 
 def my_effected_time(char, influence, timingeffect):
     """
     Given the action's influence and timingeffect, provide the default
     time value to reset to.
     """
-    time = min(0, max(7, max_influence(char, influence) + timingeffect))
+    time = max(0, min(7, max_influence(char, influence) + timingeffect))
     if time == 7: time = 9
     return time
 
@@ -90,7 +90,7 @@ def other_effected_time(time, timingeffect):
     if timingeffect == -6:
         return 9, 0
     totaltime = time + timingeffect
-    actualtime = min(0, max(7, totaltime))
+    actualtime = max(0, min(7, totaltime))
     delta = math.abs(totaltime - actualtime)
     return actualtime, delta
 
@@ -100,6 +100,6 @@ def check_action(char, contested, influence, heroic, profession):
     return avail >= will, avail >= gua
 
 def max_recovery(char):
-    return min(char.energy, 1)
+    return max(char.energy, 1)
 
 # vim: ai et ts=4 sts=4 sw=4
