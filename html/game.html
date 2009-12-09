@@ -41,7 +41,16 @@
 	<dd>{{ game.lastinfluence }}</dd>
 
 	<dt>Last Roll</dt>
-	<dd>{{ game.lastroll }}</dd> {# TODO: Rich formatting #}
+	{% rolleffect game.lastroll %}
+	<dd style="color: {{ rollcolor }};">{{ game.lastroll }}</dd>
+	{% if effect %}
+	<dd style="color: {{ effectcolor }};">Effect {{ effectlt|escape }}= 
+		{{ effect }}</dd>
+	{% endif %}
+	{% if timing %}
+	<dd style="color: {{ timingcolor }};">Timing {{ timinglt|escape }}=
+		{{ timing }}</dd>
+	{% endif %}
 
 	<dt>Current Remaining Effect</dt>
 	<dd>{{ game.cureffect }}</dd>

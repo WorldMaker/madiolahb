@@ -23,6 +23,12 @@ def OnBlipSubmitted(properties, context):
             doc.SetTextInRange(Range(match.end() - 1, match.end()), ')')
             doc.SetAnnotation(Range(match.start(), match.end()), 
                 'style/fontStyle', 'italic')
+        if any(sen['verb'] == 'act' or sen['verb'] == 'contest' for sen
+        in com.commanded):
+            waml.append_waml(blip.CreateChild().GetDocument(),
+                'wave/roll.yaml',
+                {'roll': game.lastroll},
+            )
         if com.errors or com.warnings:
             waml.append_waml(doc.InsertInlineBlip(match.end()-2).GetDocument(),
                 'wave/errors.yaml',

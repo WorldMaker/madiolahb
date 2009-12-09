@@ -51,6 +51,7 @@ def main():
     run_wsgi_app(application)
 
 if __name__ == '__main__':
+    template.register_template_library('templatetags')
     main()
 
 # vim: ai et ts=4 sts=4 sw=4
