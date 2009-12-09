@@ -18,7 +18,7 @@ def regex(pattern):
 
 imverb = [('is', 'called'), 'continues', 'ends']
 dir = ['ne', 'nw', 'se', 'sw', 'n', 's', 'e', 'w']
-element = ['life', 'earth', 'water', 'energy', 'air', 'water']
+element = ['life', 'earth', 'water', 'energy', 'air', 'fire']
 drained = ['drained', 'dissipated', 'spent']
 influence = ['mastery', 'persistence', 'design', 'poise', 'sleight', 'charm',
     'mind', 'body', 'spirit']

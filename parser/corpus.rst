@@ -77,6 +77,10 @@ Setting a character's spots::
   >>> sen['verb'], sen['will_spent'], sen['ego_spot']
   ('has', 2, 1)
 
+  >>> sen = parse('I have 1 Water, 2 Energy, 1 Air, 2 Fire.')[0]
+  >>> sen['verb'], sen['water'], sen['energy'], sen['air'], sen['fire']
+  ('has', 1, 2, 1, 2)
+
 Game Flow
 ---------
 
