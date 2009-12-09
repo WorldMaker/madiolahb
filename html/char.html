@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}{{ char.name }} &mdash; HCE Character{% endblock %}
+{% block title %}{{ char.name|title }} &mdash; HCE Character{% endblock %}
 
 {% block content %}
-<h1>{{ char.name }}</h1>
+<h1>{{ char.name|title }}</h1>
 
 <p><a href="/game/{{ char.parent_key }}">This character's game</a></p>
 

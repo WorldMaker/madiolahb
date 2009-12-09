@@ -31,11 +31,11 @@
 
 	<dt>Characters Currently Holding</dt>
 	{% for char in game.hold %}
-	<dd><a href="/char/{{ char.key }}">{{ char.name }}</a></dd>
+	<dd><a href="/char/{{ char.key }}">{{ char.name|title }}</a></dd>
 	{% endfor %}
 
 	<dt>Currently Playing Character</dt>
-	<dd><a href="/char/{{ game.active.key }}">{{ game.active.name }}</a></dd>
+	<dd><a href="/char/{{ game.active.key }}">{{ game.active.name|title }}</a></dd>
 
 	<dt>Last Influence Acted</dt>
 	<dd>{{ game.lastinfluence }}</dd>
@@ -51,7 +51,7 @@
 
 	{% if game.renownvote %}
 	<dt>Renown Nomination</dt>
-	<dd><a href="/char/{{ game.renownnom.key }}">{{ game.renownnom.name }}</a> was nominated for {{ game.renowncount }} token of {{ game.renowninf }} renown.</dd>
+	<dd><a href="/char/{{ game.renownnom.key }}">{{ game.renownnom.name|title }}</a> was nominated for {{ game.renowncount }} token of {{ game.renowninf }} renown.</dd>
 
 	<dt>Renown Ayes</dt>
 	{% for player in game.renownaye %}
@@ -69,7 +69,7 @@
 
 	<dt>Active Characters</dt>
 	{% for char in game.active_chars %}
-	<dd><a href="/char/{{ char.key }}">{{ char.name }}</a></dd>
+	<dd><a href="/char/{{ char.key }}">{{ char.name|title }}</a></dd>
 	{% endfor %}
 </dl>
 {% endblock %}

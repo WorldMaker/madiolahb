@@ -1,5 +1,13 @@
 {% for error in errors %}
-- ["ERROR: {{ error }}\n", style/color: red]
+-
+  type: image
+  url: "http://hce-bee.appspot.com/static/error.png"
+- ["Error:", {style/color: red, style/fontWeight: bold}]
+- " {{ error|escapejs }}\n"
 {% endfor %}{% for warn in warnings %}
-- ["WARNING: {{ warn }}\n", style/color: orange]
+-
+  type: image
+  url: "http://hce-bee.appspot.com/static/warning.png"
+- ["Warning:", {style/color: orange, style/fontWeight: bold}]
+- " {{ warn|escapejs }}\n"
 {% endfor %}
