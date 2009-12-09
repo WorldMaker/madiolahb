@@ -15,6 +15,10 @@ def flow(self, subject=None, **kwargs):
                 self.warnings.append('Not enough will to move %s to %s' % (
                     kwargs[inf], inf))
             else:
+                maxinf = max_influence(self.char, inf)
+                if kwargs[inf] > maxinf:
+                    self.warnings.append('Over-exerted: %s > %s' % (
+                        kwargs[inf], maxinf))
                 self.char.will -= kwargs[inf]
                 oldinfcount = getattr(self.char, inf)
                 setattr(self.char, inf, oldinfcount + kwargs[inf])
