@@ -4,6 +4,7 @@ from google.appengine.ext.webapp import template
 from waveapi import events, robot
 from waveapi.document import Range
 from backend import COMMAND_RE, Commander
+from hce import max_influence
 from models import WaveGame
 import waml
 
@@ -43,7 +44,8 @@ def OnBlipSubmitted(properties, context):
             waml.append_waml(root_wavelet.CreateBlip().GetDocument(),
                 'wave/ticks.yaml',
                 {'ticks': ticks, 'atready': com.atready, 
-                    'maxpoise': max(char.poise for char in com.atready)},
+                    'maxpoise': max(max_influence(char, 'poise') for char \
+                    in com.atready)},
             )
     com.commit()
 

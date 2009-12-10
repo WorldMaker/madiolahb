@@ -1,7 +1,7 @@
 # HCE Bee
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
-from hce import my_effected_time, other_effected_time, tick, time_range, \
-    TIME_READY
+from hce import max_influence, my_effected_time, other_effected_time, tick, \
+    time_range, TIME_READY
 from models import INFLUENCES
 
 def _crit(self):
@@ -34,7 +34,7 @@ def _tick(self):
                 # The char is no longer waiting for anyone else to 0/ready
                 char.time = 1
             if char.time == TIME_READY:
-                self.atready.append(char.name)
+                self.atready.append(char)
                 # Flow exerted influence will
                 exerted = sum(getattr(char, inf) for inf in INFLUENCES)
                 char.will_spot = exerted
@@ -61,9 +61,9 @@ def timing(self, subject=None, value=None, **kwargs):
         # Ready
         if not self.activechars:
             self.activechars = list(self.game.active_chars)
-        maxpoise = max(char.poise for char in self.activechars
-            if char.time == TIME_READY)
-        if self.char.poise == maxpoise:
+        maxpoise = max(max_influence(char, 'poise') for char
+            in self.activechars if char.time == TIME_READY)
+        if max_influence(self.char, 'poise') == maxpoise:
             self.game.active = self.char
             self.gameupdated = True
         else:
@@ -90,7 +90,9 @@ def timing(self, subject=None, value=None, **kwargs):
 
 def set(self, subject=None, object=None, time=None, **kwargs):
     if not self._char(subject): return False
-    if not self._active(): return False
+    # Allow for character sets prior to an active character
+    if self.game.active is not None:
+        if not self._active(): return False
 
     object = self._object(object)
     if object is None: return
@@ -101,7 +103,9 @@ def set(self, subject=None, object=None, time=None, **kwargs):
             return False
     else:
         # Time to guesstimate...
-        if object.key() == self.char.key():
+        if self.game.active is None:
+            time = max_influence(object, 'poise')
+        elif object.key() == self.char.key():
             time = my_effected_time(self.char, self.game.lastinfluence,
                 self.game.curtiming)
         else:

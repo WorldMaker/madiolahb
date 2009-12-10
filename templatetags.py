@@ -10,6 +10,11 @@ def escapeyaml(value):
     value = unicode(value)
     return value.replace('"', r'\"')
 
+@register.filter
+def maxpoise(value):
+    from hce import max_influence
+    return max_influence(value, 'poise')
+
 class RollEffectNode(Node):
     def __init__(self, roll):
         self.roll = roll
