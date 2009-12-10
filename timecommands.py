@@ -59,8 +59,6 @@ def timing(self, subject=None, value=None, **kwargs):
 
     if value.startswith('read'):
         # Ready
-        if not self.activechars:
-            self.activechars = list(self.game.active_chars)
         maxpoise = max(max_influence(char, 'poise') for char
             in self.activechars if char.time == TIME_READY)
         if max_influence(self.char, 'poise') == maxpoise:
