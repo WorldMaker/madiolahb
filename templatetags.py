@@ -20,7 +20,6 @@ class RollEffectNode(Node):
         self.roll = roll
     def render(self, context):
         from hce import ROLL_EFFECT
-        import math
         try:
             roll = int(resolve_variable(self.roll, context))
         except TypeError:
@@ -42,7 +41,7 @@ class RollEffectNode(Node):
         elif timing > 0:
             if timing < 6: timinglt = '<'
             timingcolor = 'green'
-        effect, timing = math.abs(effect), math.abs(timing)
+        effect, timing = abs(effect), abs(timing)
         context.update({
             'rollcolor': rollcolor,
             'effect': effect,

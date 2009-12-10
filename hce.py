@@ -1,7 +1,6 @@
 # HCE Bee
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
 from models import SPOTS
-import math
 
 """
 This is a module for HCE-specific domain knowledge.
@@ -91,7 +90,7 @@ def other_effected_time(time, timingeffect):
         return 9, 0
     totaltime = time + timingeffect
     actualtime = max(0, min(7, totaltime))
-    delta = math.abs(totaltime - actualtime)
+    delta = abs(totaltime - actualtime)
     return actualtime, delta
 
 def check_action(char, contested, influence, heroic, profession):
