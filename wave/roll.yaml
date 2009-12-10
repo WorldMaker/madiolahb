@@ -1,7 +1,6 @@
 {% rolleffect roll %}
-- "Roll: "
-- ["{{ roll }}", style/color: {{ rollcolor }}]
-- ", Effect {{ effectlt }}="
-- ["{{ effect }}", style/color: {{ effectcolor }}]
-- ", Timing {{ timinglt }}="
-- ["{{ timing }}", style/color: {{ timingcolor }}]
+- ["Roll: {{ roll }}", style/color: {{ rollcolor }}]
+- ", "
+- ["Effect {{ effectlt }}= {{ effect }}", style/color: {{ effectcolor }}]
+- ", "
+- ["Timing {{ timinglt }}= {{ timing }}", style/color: {{ timingcolor }}]
