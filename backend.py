@@ -186,7 +186,7 @@ class Commander(object):
         return self.char
 
     def _active(self):
-        if self.char.name == self.game.active:
+        if self.char.key() == self.game.active.key():
             return True
         else:
             self.warnings.append('%s is not currently active' % self.char.name)
