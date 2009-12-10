@@ -96,7 +96,7 @@ def other_effected_time(time, timingeffect):
 
 def check_action(char, contested, influence, heroic, profession):
     will, gua = ACTION_WILL[heroic, contested]
-    avail = getattr(char, influence, 0) + getattr(char, 'job' + profession, 0)
+    avail = getattr(char, influence, 0) + getattr(char, 'job%s' % profession, 0)
     return avail >= will, avail >= gua
 
 def max_recovery(char):
