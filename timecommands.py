@@ -7,7 +7,7 @@ from models import INFLUENCES
 def _crit(self):
     for char in self.activechars:
         if char.time == 0:
-            char.recovery = min(0, char.recovery - 1)
+            char.recovery = max(0, char.recovery - 1)
             if char.key() not in self.updated:
                 self.updated.append(char.key())
 
