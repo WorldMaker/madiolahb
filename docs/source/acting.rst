@@ -96,7 +96,7 @@ remembered roll.
 Directions accepted are the abbreviations for everyone's favorite
 compass directions (one of N, S, E, W, NE, NW, SE, or SW). Generally the
 Bee assumes a hex map and the coordinate system should reflect that, for
-instance E and W counts should be multiples of 2.
+instance N and S counts should be multiples of 2.
 
 Synonyms for "spots" includes "spaces" and "paces". The word can also be
 elided entirely.
