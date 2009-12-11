@@ -26,10 +26,7 @@ def OnBlipSubmitted(properties, context):
                 'style/fontStyle', 'italic')
         if any(sen['verb'] == 'act' or sen['verb'] == 'contest' for sen
         in com.commanded):
-            waml.append_waml(blip.CreateChild().GetDocument(),
-                'wave/roll.yaml',
-                {'roll': game.lastroll},
-            )
+            waml.append_waml(doc, 'wave/roll.yaml', {'roll': game.lastroll})
         if com.errors or com.warnings:
             waml.append_waml(doc.InsertInlineBlip(match.end()-2).GetDocument(),
                 'wave/errors.yaml',
