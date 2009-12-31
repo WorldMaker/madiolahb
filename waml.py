@@ -47,4 +47,24 @@ def append_waml(doc, filename, context={}):
     for annot in annots:
         doc.SetAnnotation(*annot)
 
+def plaintext(filename, context={}):
+    """
+    Takes a Django-templated YAML file at filename and returns a
+    plaintext expansion with the given context.
+    """
+    tmpl = yaml.load(template.render(filename, context))
+
+    def txt(tok):
+        if isinstance(tok, list):
+            if len(tok) > 1 and isinstance(tok[1], dict):
+                if "link/manual" in tok[1]: # Specially extract hyperlinks
+                    return "%s <%s>" % (tok[0], tok[1]["link/manual"])
+            return str(tok[0])
+        elif isinstance(tok, dict):
+            return ''
+        else:
+            return str(tok)
+
+    return ''.join(txt(tok) for tok in tmpl)
+
 # vim: ai et ts=4 sts=4 sw=4
