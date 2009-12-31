@@ -1,5 +1,6 @@
-- "Hi, I'm the Bee and I'll be your choreographer for the HCE by Wave.
-  For your reference, here's "
+- "Hi, I'm the Bee and I'll be your choreographer for the "
+- [HoneyComb Engine, link/manual: "http://www.honeycombengine.com/"]
+- ". For your reference, here's "
 - [my dashboard for your game,
   link/manual: "http://hce-bee.appspot.com/game/{{ game.key }}"]
 - " and "
