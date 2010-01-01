@@ -1,16 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}HCE Game 
+{% block title %}{{ game.title }} &mdash; HCE Game 
 {% ifequal game.class_name "WaveGame" %}by Wave{% endifequal %}
 {% ifequal game.class_name "EmailGame" %}by Email{% endifequal %}
 {% ifequal game.class_name "XmppGame" %}by IM{% endifequal %}
 {% endblock %}
 
 {% block content %}
-<h1>HCE Game
-{% ifequal game.class_name "WaveGame" %}by Wave{% endifequal %}
-{% ifequal game.class_name "EmailGame" %}by Email{% endifequal %}
-{% ifequal game.class_name "XmppGame" %}by IM{% endifequal %}</h1>
+<h1>{{ game.title }}</h1>
 
 <dl>
 	<dt>Game Type</dt>

@@ -52,6 +52,7 @@ class Character(db.Model):
     y = db.IntegerProperty(default=0)
 
 class Game(polymodel.PolyModel):
+    title = db.StringProperty()
     players = db.StringListProperty()
     hold = db.ListProperty(db.Key) # Explicit holding chars
     # Current "active" char

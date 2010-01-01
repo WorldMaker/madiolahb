@@ -51,12 +51,19 @@ def OnRobotAdded(properties, context):
     waveid = root_wavelet.GetWaveId()
     if WaveGame.all().filter('waveid =', waveid).count(1) > 0:
         return
-    game = WaveGame(waveid=waveid)
+    game = WaveGame(waveid=waveid, title=root_wavelet.GetTitle())
     game.put()
     waml.append_waml(root_wavelet.CreateBlip().GetDocument(),
         'wave/welcome.yaml',
         {'game': game},
     )
+
+def title_changed(properties, context):
+    root_wavelet = context.GetRootWavelet()
+    game = WaveGame.all().filter('waveid =', waveid).get()
+    if not game: return
+    game.title = root_wavelet.GetTitle()
+    game.put()
 
 if __name__ == '__main__':
     template.register_template_library('templatetags')
@@ -66,6 +73,7 @@ if __name__ == '__main__':
         profile_url='http://hce-bee.appspot.com/')
     myRobot.RegisterHandler(events.BLIP_SUBMITTED, OnBlipSubmitted)
     myRobot.RegisterHandler(events.WAVELET_SELF_ADDED, OnRobotAdded)
+    myRobot.RegisterHandler(events.WAVELET_TITLE_CHANGED, title_changed)
     myRobot.Run()
 
 # vim: ai et ts=4 sts=4 sw=4
