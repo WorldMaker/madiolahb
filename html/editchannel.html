@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Channel: {{ channel.key.name }}{% endblock %}
+
+{% block extrahead %}
+<script src="http://www.google.com/jsapi"></script>
+<script>
+google.load("jquery", "1.3.2");
+google.load("jqueryui", "1.7.2");
+
+function onLoad() {
+  $('#tabs').tabs();
+}
+
+google.setOnLoadCallback(onLoad);
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="ui-widget"><h1>Edit Channel: {{ channel.key.name }}</h1></div>
+
+<div id="tabs">
+	<ul>
+		<li><a href="#email">Play By Email</a></li>
+		<li><a href="#im">Play By IM</a></li>
+	</ul>
+	<div id="email"><dl>
+		<dt>Channel Email Address</dt>
+		<dd><a href="mailto:{{ channel.key.name }}@hce-bee.appspotmail.com">{{ channel.key.name }}@hce-bee.appspotmail.com</a></dd>
+		{% if channel.active_email_game %}
+		<dt>Current Game</dt>
+		<dd><a href="/game/{{ channel.active_email_game.key }}">{{ channel.active_email_game.title }}</a></dd>
+		{% endif %}
+	</dl></div>
+	<div id="im"><dl>
+		<dt>Channel IM Address</dt>
+		<dd><a href="xmpp:{{ channel.key.name }}@hce-bee.appspotchat.com">{{ channel.key.name }}@hce-bee.appspotchat.com</a></dd>
+		{% if channel.active_xmpp_game %}
+		<dt>Current Game</dt>
+		<dd><a href="/game/{{ channel.active_xmpp_game.key }}">{{ channel.active_xmpp_game.title }}</a></dd>
+		{% endif %}
+	</dl></div>
+</div>
+{% endblock %}

@@ -1,10 +1,13 @@
 <html>
 <head>
 	<title>{% block title %}{% endblock %} &mdash; HCE Bee</title>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" type="text/css" />
+	{% block extrahead %}
+	{% endblock %}
 </head>
 <body>
 	{% block content %}
 	{% endblock %}
 </body>
 </html>
-{# vim: ft=htmldjango #}
+{# vim: set ft=htmldjango: #}

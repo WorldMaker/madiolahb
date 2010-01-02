@@ -28,6 +28,11 @@ handlers:
 - url: /(game|char)/.*
   script: stats.py
 
+# Channel pages
+- url: /channel.*
+  script: channel.py
+  login: required
+
 # Email
 - url: /_ah/mail/.*
   script: mail.py

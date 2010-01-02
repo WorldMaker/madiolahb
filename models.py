@@ -86,9 +86,20 @@ class WaveGame(Game):
     waveid = db.StringProperty(required=True)
 
 class EmailGame(Game):
-    subject = db.StringProperty(required=True)
+    pass
 
 class XmppGame(Game):
-    name = db.StringProperty(required=True)
+    pass
+
+class Channel(db.Model):
+    """
+    A Channel moderates Email and Xmpp games.
+    """
+    owner = db.UserProperty(required=True)
+    active_email_game = db.ReferenceProperty(EmailGame,
+        collection_name='active_set')
+    active_xmpp_game = db.ReferenceProperty(XmppGame,
+        collection_name='active_set')
+    games = db.ReferenceProperty(Game)
 
 # vim: ai ts=4 sts=4 et sw=4

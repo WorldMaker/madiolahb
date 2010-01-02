@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Channels{% endblock %}
+
+{% block extrahead %}
+<script src="http://www.google.com/jsapi"></script>
+<script>
+google.load("jquery", "1.3.2");
+google.load("jqueryui", "1.7.2");
+
+function onLoad() {
+  $('a.ui-state-default')
+  .hover(
+    function(){ $(this).addClass("ui-state-hover"); },
+    function(){ $(this).removeClass("ui-state-hover"); }
+  )
+  .focus(function(){ $(this).addClass("ui-state-focus"); })
+  .blur(function(){ $(this).removeClass("ui-state-focus"); })
+  .mousedown(function(){
+    // $(this).parents('.fg-buttonset-single:first').find(".fg-button.ui-state-active").removeClass("ui-state-active");
+    // if( $(this).is('.ui-state-active.fg-button-toggleable, .fg-buttonset-multi .ui-state-active') ){ $(this).removeClass("ui-state-active"); }
+    // else { 
+    $(this).addClass("ui-state-active"); 
+    // }	
+  })
+  .mouseup(function(){
+    // if(! $(this).is('.fg-button-toggleable, .fg-buttonset-single .fg-button,  .fg-buttonset-multi .fg-button') ){
+    $(this).removeClass("ui-state-active");
+    // }
+  });
+}
+
+google.setOnLoadCallback(onLoad);
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="ui-widget"><h1>Channels</h1></div>
+
+<div id="mychannels" class="ui-widget"><ul>
+	{% for chan in channels %}
+	<li><a href="/channel/edit/{{ chan.key.name }}">{{ chan.key.name }}</a></li>	
+	{% endfor %}
+</ul></div>
+
+<div class="ui-widget">
+<a class="ui-state-default ui-corner-all" href="/channel/new">New Channel</a>
+</div>
+{% endblock %}
