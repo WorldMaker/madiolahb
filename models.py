@@ -56,13 +56,15 @@ class Game(polymodel.PolyModel):
     players = db.StringListProperty()
     hold = db.ListProperty(db.Key) # Explicit holding chars
     # Current "active" char
-    active = db.ReferenceProperty(collection_name='active_in_game_set')
+    active = db.ReferenceProperty(Character,
+        collection_name='active_in_game_set')
     lastinfluence = db.StringProperty()
     lastroll = db.IntegerProperty()
     cureffect = db.IntegerProperty() # Current effect taken by active char
     curtiming = db.IntegerProperty() # Current timing taken by active char
     renownvote = db.BooleanProperty(default=False)
-    renownnom = db.ReferenceProperty(collection_name='renown_nominated_set')
+    renownnom = db.ReferenceProperty(Character,
+        collection_name='renown_nominated_set')
     renowninf = db.StringProperty()
     renowncount = db.IntegerProperty()
     renownaye = db.StringListProperty()
