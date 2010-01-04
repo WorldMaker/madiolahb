@@ -10,6 +10,25 @@ google.load("jqueryui", "1.7.2");
 
 function onLoad() {
   $('#tabs').tabs();
+  $('button.ui-state-default')
+  .hover(
+    function(){ $(this).addClass("ui-state-hover"); },
+    function(){ $(this).removeClass("ui-state-hover"); }
+  )
+  .focus(function(){ $(this).addClass("ui-state-focus"); })
+  .blur(function(){ $(this).removeClass("ui-state-focus"); })
+  .mousedown(function(){
+    // $(this).parents('.fg-buttonset-single:first').find(".fg-button.ui-state-active").removeClass("ui-state-active");
+    // if( $(this).is('.ui-state-active.fg-button-toggleable, .fg-buttonset-multi .ui-state-active') ){ $(this).removeClass("ui-state-active"); }
+    // else { 
+    $(this).addClass("ui-state-active"); 
+    // }	
+  })
+  .mouseup(function(){
+    // if(! $(this).is('.fg-button-toggleable, .fg-buttonset-single .fg-button,  .fg-buttonset-multi .fg-button') ){
+    $(this).removeClass("ui-state-active");
+    // }
+  });
 }
 
 google.setOnLoadCallback(onLoad);
@@ -30,6 +49,13 @@ google.setOnLoadCallback(onLoad);
 		{% if channel.active_email_game %}
 		<dt>Current Game</dt>
 		<dd><a href="/game/{{ channel.active_email_game.key }}">{{ channel.active_email_game.title }}</a></dd>
+		{% else %}{# TODO: This should be allowed more often? #}
+                <h2>New Game</h2>
+		<form method="POST" action="/channel/newe/{{ channel.key.name }}">
+                <p>Game Title: <input type="text" name="title" /></p>
+		<button type="submit" class="ui-state-default ui-corner-all">
+		Create</button>
+		</form>
 		{% endif %}
 	</dl></div>
 	<div id="im"><dl>
@@ -38,6 +64,13 @@ google.setOnLoadCallback(onLoad);
 		{% if channel.active_xmpp_game %}
 		<dt>Current Game</dt>
 		<dd><a href="/game/{{ channel.active_xmpp_game.key }}">{{ channel.active_xmpp_game.title }}</a></dd>
+		{% else %}{# TODO: This should be allowed more often? #}
+                <h2>New Game</h2>
+		<form method="POST" action="/channel/newx/{{ channel.key.name }}">
+                <p>Game Title: <input type="text" name="title" /></p>
+		<button type="submit" class="ui-state-default ui-corner-all">
+		Create</button>
+		</form>
 		{% endif %}
 	</dl></div>
 </div>

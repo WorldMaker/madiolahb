@@ -66,11 +66,45 @@ class EditChannelHandler(webapp.RequestHandler):
             'channel': chan,
         }))
 
+class NewEmailGameHandler(webapp.RequestHandler):
+    def post(self, channel=''):
+        chan = Channel.get_by_key_name(channel)
+        if not chan:
+            self.error(404)
+            return
+        if chan.owner != users.get_current_user() or chan.active_email_game:
+            self.error(403)
+            return
+        game = EmailGame(title=self.request.POST.get('title'))
+        game.put()
+        chan.active_email_game = game
+        chan.put()
+        self.redirect('/channel/edit/%s' % channel)
+
+class NewXmppGameHandler(webapp.RequestHandler):
+    def post(self, channel=''):
+        chan = Channel.get_by_key_name(channel)
+        if not chan:
+            self.error(404)
+            return
+        if chan.owner != users.get_current_user() or chan.active_xmpp_game:
+            self.error(403)
+            return
+        game = XmppGame(title=self.request.POST.get('title'))
+        game.put()
+        chan.active_xmpp_game = game
+        chan.put()
+        self.redirect('/channel/edit/%s' % channel)
+
 application = webapp.WSGIApplication([
     (r'/channel/new/?', NewChannelHandler),
     (r'/channel/available/?', CheckChannelHandler),
     (r'/channel/edit/(?P<channel>%s)/?' % CHANNEL_RE.pattern,
         EditChannelHandler),
+    (r'/channel/newe/(?P<channel>%s)/?' % CHANNEL_RE.pattern,
+        NewEmailGameHandler),
+    (r'/channel/newx/(?P<channel>%s)/?' % CHANNEL_RE.pattern,
+        NewXmppGameHandler),
     (r'/channel/?', ChannelHomeHandler),
 ])
 
