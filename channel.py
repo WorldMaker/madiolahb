@@ -26,7 +26,8 @@ class NewChannelHandler(webapp.RequestHandler):
 
     def post(self):
         name = self.request.POST.get('name', '')
-        valid = CHANNEL_RE.match(name) is not None
+        match = CHANNEL_RE.match(name)
+        valid = match is not None and match.group() == name
         avail = valid and Channel.get_by_key_name(name) is None
         if valid and avail:
             chan = Channel(key_name=name, owner=users.get_current_user())
@@ -41,7 +42,8 @@ class NewChannelHandler(webapp.RequestHandler):
 class CheckChannelHandler(webapp.RequestHandler):
     def post(self):
         name = self.request.POST.get('name', '')
-        valid = CHANNEL_RE.match(name) is not None
+        match = CHANNEL_RE.match(name)
+        valid = match is not None and match.group() == name
         data =  {
             'valid': valid,
             'available': valid and Channel.get_by_key_name(name) is None,
