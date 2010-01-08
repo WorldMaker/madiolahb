@@ -24,7 +24,7 @@ class XmppHandler(webapp.RequestHandler):
         self.receive(chan, message)
 
     def receive(self, channel, message):
-        game = channel.active_email_game
+        game = channel.active_xmpp_game
         if not game: return
         com = Commander(game, message.sender)
         for match in COMMAND_RE.finditer(message.body):
