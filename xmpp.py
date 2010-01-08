@@ -27,32 +27,30 @@ class XmppHandler(webapp.RequestHandler):
         game = channel.active_email_game
         if not game: return
         com = Commander(game, message.sender)
-        reply = ''
         for match in COMMAND_RE.finditer(message.body):
             result = com.command(match.group('commands'))
             if any(sen['verb'] == 'act' or sen['verb'] == 'contest' for sen
             in com.commanded):
-                reply += waml.plaintext('wave/roll.yaml', {
+                message.reply(waml.plaintext('wave/roll.yaml', {
                     'roll': game.lastroll,
-                })
+                }))
             if com.errors or com.warnings:
-                reply += waml.plaintext('wave/errors.yaml', {
+                message.reply(waml.plaintext('wave/errors.yaml', {
                     'errors': com.errors,
                     'warnings': com.warnings
-                })
+                }))
             if com.tickselapsed:
                 ticks = ''
                 if com.tickselapsed <= 3:
                     ticks = ' '.join(['Tick.'] * com.tickselapsed)
                 else:
                     ticks = '%s Ticks.' % com.tickselapsed
-                reply += waml.plaintext('wave/ticks.yaml', {
+                message.reply(waml.plaintext('wave/ticks.yaml', {
                     'ticks': ticks, 'atready': com.atready, 
                     'maxpoise': max(max_influence(char, 'poise') for char \
                     in com.atready)
-                })
+                }))
         com.commit()
-        message.reply(reply)
 
 application = webapp.WSGIApplication([
     ('/_ah/xmpp/message/chat/', XmppHandler),
