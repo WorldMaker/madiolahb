@@ -132,6 +132,14 @@ Unchallenged actions::
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('act', 'poise', True, 0)
 
+  >>> sen = parse('Action with mind mastery.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['hero_influence']
+  ('act', 'mastery', True, 'mind')
+
+  >>> sen = parse('Action with body.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['hero_influence']
+  ('act', None, True, 'body')
+
 Challenged actions::
 
   >>> sen = parse('I challenge Bob in poise.')[0]
@@ -163,6 +171,12 @@ Challenged actions::
   ('contest', 'sleight', True, 0)
   >>> sen['object']
   'the pope'
+
+  >>> sen = parse('Challenge Zeus with mind mastery.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['hero_influence']
+  ('contest', 'mastery', True, 'mind')
+  >>> sen['object']
+  'zeus'
 
 Losing ego::
 

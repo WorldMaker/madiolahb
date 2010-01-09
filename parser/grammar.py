@@ -19,8 +19,8 @@ def regex(pattern):
 dir = ['ne', 'nw', 'se', 'sw', 'n', 's', 'e', 'w']
 element = ['life', 'earth', 'water', 'energy', 'air', 'fire']
 drained = ['drained', 'dissipated', 'spent']
-influence = ['mastery', 'persistence', 'design', 'poise', 'sleight', 'charm',
-    'mind', 'body', 'spirit']
+influence = ['mastery', 'persistence', 'design', 'poise', 'sleight', 'charm']
+hero_influence = ['mind', 'body', 'spirit']
 pronouns = ['i ', 'he ', 'she ', 'it ']
 pospronouns = ['my', 'his', 'her', 'its']
 refpronouns = ['myself', 'me', 'himself', 'him', 'herself', 'her', 'itself',
@@ -82,15 +82,16 @@ def stat():         return num, [(['ego', 'will'], Optional(drained)),
                         (element, Optional('strength'))]
 def has():          return ['have', 'has'], OneOrMore((stat, andcomma))
 
-def flowto():       return num, 'to', influence
+def flowto():       return num, 'to', influence + hero_influence
 def flow():         return flowverb, OneOrMore((flowto, andcomma))
 
 def heroic():       return Optional(herorem)
 def underprof():    return Optional(('under', [profnum, profcard]))
+def actinfluence(): return [(hero_influence, Optional(influence)), influence]
 def contest():      return heroic, contestverb, Optional('against'), refid, \
-                        heroic, ['with', 'in'], influence, underprof
-def act():          return heroic, actverb, heroic, ['with', 'in'], influence, \
-                        underprof
+                        heroic, ['with', 'in'], actinfluence, underprof
+def act():          return heroic, actverb, heroic, ['with', 'in'], \
+                        actinfluence, underprof
 
 def set():          return setverb, Optional(refid), \
                         Optional(('to', Optional('time'), num))
@@ -280,6 +281,21 @@ has.sem = TupleVerb('has')
 flow.sem = TupleVerb('flow')
 advanced.sem = TupleVerb('advanced')
 
+class ActInfluence(SemanticAction):
+    def first_pass(self, parser, node, nodes):
+        sd = {'influence': None}
+        if nodes[0].value in hero_influence:
+            sd['heroic'] = True
+            sd['hero_influence'] = nodes[0].value
+            if len(nodes) > 1:
+                sd['influence'] = nodes[1].value
+        else:
+            sd['influence'] = nodes[0].value
+        node.nodes = sd
+        return node
+
+actinfluence.sem = ActInfluence()
+
 class Action(SemanticAction):
     def __init__(self, verb):
         self.verb = verb
@@ -297,8 +313,8 @@ class Action(SemanticAction):
                 sd['object'] = n
             elif isinstance(n, int):
                 sd['profession'] = n
-            elif isinstance(n, Terminal) and n.value in influence:
-                sd['influence'] = n.value
+            elif isinstance(n, NonTerminal) and isinstance(n.nodes, dict):
+                sd.update(n.nodes)
         node.nodes = sd
         return node
 
