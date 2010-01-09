@@ -16,7 +16,6 @@ def regex(pattern):
 
 ## Atomic bits and pieces ##
 
-imverb = [('is', 'called'), 'continues', 'ends']
 dir = ['ne', 'nw', 'se', 'sw', 'n', 's', 'e', 'w']
 element = ['life', 'earth', 'water', 'energy', 'air', 'fire']
 drained = ['drained', 'dissipated', 'spent']
@@ -49,7 +48,6 @@ def num():          return regex(r'\d+')
 def pronoun():      return pronouns
 def pospronoun():   return pospronouns
 def refpronoun():   return refpronouns, And(regex(r'\s|.'))
-def imsentence():   return ['this', 'thus'], imverb, regex(r'[^\.]+')
 
 # TODO: Grab a better email/im RegEx
 def addr():         return regex(r'[\w0-9\-_\.\+]+\@[\w0-9\-_\.]+')
@@ -127,7 +125,7 @@ def phrase():       return [advanced, has, flow, contest, act, move,
                         set, lose, recover, renown, vote, chown, isphrase]
 
 def asentence():    return Optional(asphrase), Optional(id), phrase
-def sentence():     return [imsentence, asentence], '.'
+def sentence():     return asentence, '.'
 def command():      return OneOrMore(sentence)
 
 ## Semantic Actions ##
@@ -408,16 +406,6 @@ class ASentence(SemanticAction):
         return node
 
 asentence.sem = ASentence()
-
-class IMSentence(SemanticAction):
-    def first_pass(self, parser, node, nodes):
-        node.nodes = {'imsentence': True,
-            'verb': nodes[1].value, 
-            'name': nodes[-1].value,
-        }
-        return node
-
-imsentence.sem = IMSentence()
 
 class CleanSentences(SemanticAction):
     def first_pass(self, parser, node, nodes):

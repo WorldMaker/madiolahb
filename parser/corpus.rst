@@ -6,28 +6,6 @@ Language Corpus
 This is a collection of doctests to test that sentences in the language
 parse as expected.
 
-IM State Management
--------------------
-
-The IM state sentences to define games::
-
-  >>> sen = parse('This is called the test game.')[0]
-  >>> print sen['imsentence'], sen['name'], sen['verb']
-  True the test game is
-
-  >>> sen = parse('Thus continues the test game.')[0]
-  >>> print sen['imsentence'], sen['name'], sen['verb']
-  True the test game continues
-
-  >>> sen = parse('This ends the test game.')[0]
-  >>> print sen['imsentence'], sen['name'], sen['verb']
-  True the test game ends
-
-Double check that other sentences are not IM sentences::
-
-  >>> parse('Ready.')[0]['imsentence']
-  False
-
 Character Description
 ---------------------
 
