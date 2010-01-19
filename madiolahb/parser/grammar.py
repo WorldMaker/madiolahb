@@ -29,7 +29,6 @@ refpronouns = ['myself', 'me', 'himself', 'him', 'herself', 'her', 'itself',
 loseverb = regex(r'(loses?|drains?)')
 moveverb = regex(r'moves?')
 flowverb = regex(r'(flows?|exerts?)')
-herorem = regex(r'hero(ic(ally)?)?')
 contestverb = regex(r'challenges?|contests?')
 actverb = regex(r'act(s|ion)?')
 setverb = regex('(re)?sets?')
@@ -40,9 +39,8 @@ timingverb = regex('read(y|ies)|holds?|interrupts?')
 activerem = regex('(in)?active')
 recoververb = regex('recovers?')
 reservedverbs = ['is', 'am', 'at', 'to', 'for', 'advanced', 'have', 'has',
-    loseverb, moveverb, flowverb, herorem, contestverb, actverb,
-    setverb, reknownverb, voteverb, timingverb, chownverb, activerem,
-    recoververb, 'in', 'with']
+    loseverb, moveverb, flowverb, contestverb, actverb, setverb, reknownverb,
+    voteverb, timingverb, chownverb, activerem, recoververb, 'in', 'with']
 
 def num():          return regex(r'\d+')
 def pronoun():      return pronouns
@@ -85,13 +83,11 @@ def has():          return ['have', 'has'], OneOrMore((stat, andcomma))
 def flowto():       return num, 'to', influence + hero_influence
 def flow():         return flowverb, OneOrMore((flowto, andcomma))
 
-def heroic():       return Optional(herorem)
 def underprof():    return Optional(('under', [profnum, profcard]))
 def actinfluence(): return [(hero_influence, Optional(influence)), influence]
-def contest():      return heroic, contestverb, Optional('against'), refid, \
-                        heroic, ['with', 'in'], actinfluence, underprof
-def act():          return heroic, actverb, heroic, ['with', 'in'], \
-                        actinfluence, underprof
+def contest():      return contestverb, Optional('against'), refid, \
+                        ['with', 'in'], actinfluence, underprof
+def act():          return actverb, ['with', 'in'], actinfluence, underprof
 
 def set():          return setverb, Optional(refid), \
                         Optional(('to', Optional('time'), num))
@@ -154,7 +150,6 @@ pronoun.sem = SpecialSem('Pronoun')
 pospronoun.sem = SpecialSem('Pronoun')
 refpronoun.sem = SpecialSem('Pronoun')
 addr.sem = SpecialSem('Addr', value=True)
-heroic.sem = SpecialSem('Heroic')
 
 class ToInt(SemanticAction):
     def first_pass(self, parser, node, nodes):

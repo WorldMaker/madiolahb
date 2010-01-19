@@ -112,10 +112,6 @@ Unchallenged actions::
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('act', 'poise', False, 0)
 
-  >>> sen = parse('He acts heroically with mastery.')[0]
-  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
-  ('act', 'mastery', True, 0)
-
   >>> sen = parse('I act with charm under my first profession.')[0]
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('act', 'charm', False, 1)
@@ -123,14 +119,6 @@ Unchallenged actions::
   >>> sen = parse('Action with design.')[0]
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('act', 'design', False, 0)
-
-  >>> sen = parse('Act heroic in sleight.')[0]
-  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
-  ('act', 'sleight', True, 0)
-
-  >>> sen = parse('Hero action with poise.')[0]
-  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
-  ('act', 'poise', True, 0)
 
   >>> sen = parse('Action with mind mastery.')[0]
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['hero_influence']
@@ -148,12 +136,6 @@ Challenged actions::
   >>> sen['object']
   'bob'
 
-  >>> sen = parse('He challenges him heroically with mastery.')[0]
-  >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
-  ('contest', 'mastery', True, 0)
-  >>> sen['object']
-  Pronoun
-
   >>> sen = parse('I contest against joe@example.com with charm under my first profession.')[0]
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
   ('contest', 'charm', False, 1)
@@ -166,9 +148,9 @@ Challenged actions::
   >>> sen['object']
   'steve'
 
-  >>> sen = parse('Challenge the Pope heroically in sleight.')[0]
+  >>> sen = parse('Challenge the Pope in sleight.')[0]
   >>> sen['verb'], sen['influence'], sen['heroic'], sen['profession']
-  ('contest', 'sleight', True, 0)
+  ('contest', 'sleight', False, 0)
   >>> sen['object']
   'the pope'
 
@@ -177,6 +159,12 @@ Challenged actions::
   ('contest', 'mastery', True, 'mind')
   >>> sen['object']
   'zeus'
+
+  >>> sen = parse('Challenge him with spirit.')[0]
+  >>> sen['verb'], sen['influence'], sen['heroic'], sen['hero_influence']
+  ('contest', None, True, 'spirit')
+  >>> sen['object']
+  Pronoun
 
 Losing ego::
 
