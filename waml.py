@@ -1,10 +1,10 @@
 # Simple, stupid Wave Annotation Markup
-# Copyright 2009 Max Battcher. Licensed for use under the Ms-PL.
+# Copyright 2010 Max Battcher. Licensed for use under the Ms-PL.
 from google.appengine.ext.webapp import template
-from waveapi.document import FormElement, Gadget, Image, Range
+from waveapi import element
 import yaml
 
-def append_waml(doc, filename, context={}):
+def append_waml(blip, filename, context={}):
     """
     Applies to the doc, which is expected to be a Wave API Document, the
     transforms specified in an appropriate data structure loaded from a
@@ -13,39 +13,23 @@ def append_waml(doc, filename, context={}):
     """
     tmpl = yaml.load(template.render(filename, context))
 
-    pos = len(doc.GetText()) + 1 # Why are ranges 1-based?
-    annots = []
-
     for tok in tmpl:
         if isinstance(tok, list):
-            doc.AppendText(tok[0])
-            end = pos + len(tok[0])
             if isinstance(tok[1], dict):
-                for key, value in tok[1].items():
-                    annots.append((Range(pos, end), key, value))
-            pos = end
+                blip.append(unicode(tok[0]), bundled_annotations=tok[1].items())
+            else:
+                blip.append(unicode(tok[0]))
         elif isinstance(tok, dict):
             type = tok.pop('type').lower()
             if type == 'image':
-                doc.AppendElement(Image(**tok))
+                blip.append(element.Image(**tok))
             elif type == 'gadget':
-                doc.AppendElement(Gadget(**tok))
-            elif type == 'formelement':
-                etype = tok.pop('element_type')
-                name = tok.pop('name')
-                doc.AppendElement(FormElement(etype, name, **tok))
-            pos += 1 # These elements take up a position?
+                blip.append(element.Gadget(tok.pop('url'), tok))
+            else:
+                pass # TODO: Support othe element types
         else:
-            tok = str(tok)
-            doc.AppendText(tok)
-            pos += len(tok)
-        space = True
-    # We collect, then apply all of the annotations at the end here
-    # because AppendText apparently automagically adjusts the end of
-    # ranges that coincide with the end of the current document, thus
-    # producing "leaky" annotations
-    for annot in annots:
-        doc.SetAnnotation(*annot)
+            tok = unicode(tok)
+            blip.append(tok)
 
 def plaintext(filename, context={}):
     """
@@ -58,13 +42,13 @@ def plaintext(filename, context={}):
         if isinstance(tok, list):
             if len(tok) > 1 and isinstance(tok[1], dict):
                 if "link/manual" in tok[1]: # Specially extract hyperlinks
-                    return "%s <%s>" % (tok[0], tok[1]["link/manual"])
-            return str(tok[0])
+                    return u"%s <%s>" % (unicode(tok[0]), tok[1]["link/manual"])
+            return unicode(tok[0])
         elif isinstance(tok, dict):
             return ''
         else:
-            return str(tok)
+            return unicode(tok)
 
-    return ''.join(txt(tok) for tok in tmpl)
+    return u''.join(txt(tok) for tok in tmpl)
 
 # vim: ai et ts=4 sts=4 sw=4
