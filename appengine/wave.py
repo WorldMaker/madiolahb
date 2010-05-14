@@ -12,7 +12,7 @@ def OnBlipSubmitted(event, wavelet):
     if not game: return
     blip = event.blip
     com = Commander(game, blip.creator)
-    for match in COMMAND_RE.finditer(doc.GetText()):
+    for match in COMMAND_RE.finditer(blip.text):
         result = com.command(match.group('commands'))
         if result is not False:
             # Swap brackets for parens and italicize to mark the command read
