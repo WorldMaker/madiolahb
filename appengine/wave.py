@@ -24,7 +24,7 @@ def OnBlipSubmitted(event, wavelet):
         in com.commanded):
             waml.append_waml(blip, 'wave/roll.yaml', {'roll': game.lastroll})
         if com.errors or com.warnings:
-            waml.append_waml(blip.insert_inline_blip(match.end()-2),
+            waml.append_waml(blip.insert_inline_blip(match.end()),
                 'wave/errors.yaml',
                 {'errors': com.errors, 'warnings': com.warnings},
             )
