@@ -62,7 +62,6 @@ if __name__ == '__main__':
     template.register_template_library('templatetags')
     myRobot = robot.Robot('hce-bee',
         image_url='http://hce-bee.appspot.com/static/logo.jpg',
-        version='2',
         profile_url='http://hce-bee.appspot.com/')
     myRobot.register_handler(events.BlipSubmitted, OnBlipSubmitted)
     myRobot.register_handler(events.WaveletSelfAdded, OnRobotAdded)
