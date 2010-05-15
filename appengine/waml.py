@@ -12,11 +12,16 @@ def append_waml(blip, filename, context={}):
     filename and with the given context.
     """
     tmpl = yaml.load(template.render(filename, context))
+    annots = []
+    start, end = 0, 0
 
     for tok in tmpl:
         if isinstance(tok, list):
             if isinstance(tok[1], dict):
-                blip.append(unicode(tok[0]), bundled_annotations=tok[1].items())
+                start = len(blip)
+                blip.append(unicode(tok[0]))
+                end = len(blip)
+                annots.append((start, end, tok[1].items()))
             else:
                 blip.append(unicode(tok[0]))
         elif isinstance(tok, dict):
@@ -26,10 +31,22 @@ def append_waml(blip, filename, context={}):
             elif type == 'gadget':
                 blip.append(element.Gadget(tok.pop('url'), tok))
             else:
-                pass # TODO: Support othe element types
+                pass # TODO: Support other element types
         else:
             tok = unicode(tok)
             blip.append(tok)
+
+    # We add annotations after the fact because Wave's API continues
+    # annotations on append. Otherwise, we'd use bundled_annotations
+    for start, end, annotations in annots:
+        # This should work according to the documentation, but the
+        # API doesn't actually support it yet:
+        #
+        # blip.range(start, end).annotate(annotations)
+
+        segment = blip.range(start, end)
+        for ann in annotations:
+           segment.annotate(ann[0], ann[1])
 
 def plaintext(filename, context={}):
     """
