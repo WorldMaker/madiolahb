@@ -1,10 +1,10 @@
 # {% rolleffect roll %}
 - "\n\n"
-- ["Roll: {{ roll }}", style/color: {{ rollcolor }}]
+- ["Roll: {{ roll }}", style/color: "{{ rollcolor }}"]
 - ", "
-- ["Effect {{ effectlt }}= {{ effect }}", style/color: {{ effectcolor }}]
+- ["Effect {{ effectlt }}= {{ effect }}", style/color: "{{ effectcolor }}"]
 - ", "
-- ["Timing {{ timinglt }}= {{ timing }}", style/color: {{ timingcolor }}]
+- ["Timing {{ timinglt }}= {{ timing }}", style/color: "{{ timingcolor }}"]
 -
   type: image
   url: http://hce-bee.appspot.com/static/roll{{ roll }}.png 
