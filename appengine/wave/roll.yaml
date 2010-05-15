@@ -5,4 +5,7 @@
 - ["Effect {{ effectlt }}= {{ effect }}", style/color: {{ effectcolor }}]
 - ", "
 - ["Timing {{ timinglt }}= {{ timing }}", style/color: {{ timingcolor }}]
+-
+  type: image
+  url: http://hce-bee.appspot.com/static/roll{{ roll }}.png 
 - "    \n"

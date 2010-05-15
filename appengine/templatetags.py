@@ -27,20 +27,20 @@ class RollEffectNode(Node):
             context['timingcolor'] = 'black'
             return ""
         effect, timing = ROLL_EFFECT[roll]
-        rollcolor = effectcolor = timingcolor = 'yellow'
+        rollcolor = effectcolor = timingcolor = '#b4b400'
         effectlt, timinglt = '', ''
         if effect < 0:
             effectlt = '<'
-            rollcolor = effectcolor = 'red'
+            rollcolor = effectcolor = '#b40000'
         elif effect > 0:
             effectlt = '<'
-            rollcolor = effectcolor = 'green'
+            rollcolor = effectcolor = '#00b400'
         if timing < 0:
             if timing > -6: timinglt = '<'
-            timingcolor = 'red'
+            timingcolor = '#b40000'
         elif timing > 0:
             if timing < 6: timinglt = '<'
-            timingcolor = 'green'
+            timingcolor = '#00b400'
         effect, timing = abs(effect), abs(timing)
         context.update({
             'rollcolor': rollcolor,

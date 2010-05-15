@@ -39,7 +39,9 @@
 
 	<dt>Last Roll</dt>
 	{% rolleffect game.lastroll %}
-	<dd style="color: {{ rollcolor }};">{{ game.lastroll }}</dd>
+	<dd style="color: {{ rollcolor }};">
+	<img src="/static/roll{{ game.lastroll }}.png"
+	alt="Roll {{ game.lastroll }}" /></dd>
 	{% if effect %}
 	<dd style="color: {{ effectcolor }};">Effect {{ effectlt|escape }}= 
 		{{ effect }}</dd>
