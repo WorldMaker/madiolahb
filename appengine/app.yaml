@@ -1,4 +1,4 @@
-application: hce-bee
+application: madiolahb
 version: alpha
 runtime: python
 api_version: 1
@@ -49,7 +49,7 @@ handlers:
 
 # Documentation
 - url: /docs
-  static_dir: docs/build/html
+  static_dir: docs
 
 # Static Files
 - url: /static

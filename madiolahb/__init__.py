@@ -1,10 +1,15 @@
-# HCE Bee
-# Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
-from models import SPOTS
+# Madiolahb
+# Copyright 2011 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
 
 """
-This is a module for HCE-specific domain knowledge.
+This is the main module for shared Madiolahb knowledge.
 """
+
+SPOTS = ('ego', 'will', 'ego_spot', 'will_spot', 'life', 'earth', 'water',
+    'energy', 'air', 'fire', 'will_spent')
+
+INFLUENCES = ('mastery', 'persistence', 'design', 'poise', 'sleight',
+    'charm', 'mind', 'body', 'spirit')
 
 TIME_READY = 9
 GUARANTEED_ROLL = 6

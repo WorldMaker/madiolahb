@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# HCE Bee Choreographer documentation build configuration file, created by
+# Madiolahb documentation build configuration file, created by
 # sphinx-quickstart on Wed Nov 18 00:06:26 2009.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -38,8 +38,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'HCE Bee Choreographer'
-copyright = u'2009, Max Battcher. Some Rights Reserved (CC by-sa)'
+project = u'Madiolahb'
+copyright = u'2009-2011, Max Battcher. Some Rights Reserved (CC by-sa)'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -159,7 +159,7 @@ html_static_path = ['_static']
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'HCEBeeChoreographerdoc'
+htmlhelp_basename = 'Madiolahbdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -173,7 +173,7 @@ htmlhelp_basename = 'HCEBeeChoreographerdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'HCEBeeChoreographer.tex', u'HCE Bee Choreographer Documentation',
+  ('index', 'Madiolahb.tex', u'Madiolahb Documentation',
    u'Max Battcher', 'manual'),
 ]
 

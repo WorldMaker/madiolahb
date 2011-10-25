@@ -2,13 +2,7 @@
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
-
-# These are the spots used by the "has" verb
-SPOTS = ('ego', 'will', 'ego_spot', 'will_spot', 'life', 'earth', 'water',
-    'energy', 'air', 'fire', 'will_spent')
-
-INFLUENCES = ('mastery', 'persistence', 'design', 'poise', 'sleight',
-    'charm', 'mind', 'body', 'spirit')
+from madiolahb import SPOTS, INFLUENCES
 
 class Character(db.Model):
     owner = db.StringProperty(required=True)
