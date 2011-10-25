@@ -8,7 +8,10 @@ interchanging Bhaloidam data.
 The formats themselves are meant to be self-documenting and easy to implement
 given a reasonable familiarity with Bhaloidam. This document serves to present
 the formats in a simple overview and to provide a place for any necessary
-further disambiguation.
+further disambiguation. This document, as all Madiolahb documents, is CC
+by-sa, but the formats presented here in any such aspects as may be
+deemed copyrightable are open for use under CC0 or other such similar
+public domain right or license.
 
 Life Wheel
 ==========
