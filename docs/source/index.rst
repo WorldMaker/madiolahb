@@ -26,6 +26,14 @@ Contents:
    :maxdepth: 3
 
    json
+
+.. todo::
+
+   Old sections to revise below
+
+.. toctree::
+   :maxdepth: 3
+
    playing
    quickref
    language
@@ -36,6 +44,9 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+Todos
+=====
 
 .. todolist::
 

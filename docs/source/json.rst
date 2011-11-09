@@ -13,11 +13,16 @@ by-sa, but the formats presented here in any such aspects as may be
 deemed copyrightable are open for use under CC0 or other such similar
 public domain right or license.
 
-Life Wheel
-==========
+Lifewheel
+=========
 
-The *Life Wheel* format (referred at times in Madiolahb as "Character" or
+The *Lifewheel* format (referred at times in Madiolahb as "Character" or
 "Char" format) is of course the central data structure in Madiolahb.
+
+.. todo::
+
+   Either elaborate why the "Character" name remains in use in madiolahb
+   or clean those up.
 
 .. sourcecode:: js
 
