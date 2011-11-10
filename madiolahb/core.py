@@ -75,7 +75,7 @@ def max_influence(char, influence):
     given influence.
     """
     ele0, ele1 = INFLUENCE_ELEMENTS[influence]
-    return min(1, getattr(char, ele0, 0) + getattr(char, ele1, 0))
+    return min(1, char[ele0] + char[ele1])
 
 def my_effected_time(char, influence, timingeffect):
     """
@@ -100,10 +100,10 @@ def other_effected_time(time, timingeffect):
 
 def check_action(char, contested, influence, heroic, profession):
     will, gua = ACTION_WILL[heroic, contested]
-    avail = getattr(char, influence, 0) + getattr(char, 'job%s' % profession, 0)
+    avail = char[influence] + char['job%s' % profession]
     return avail >= will, avail >= gua
 
 def max_recovery(char):
-    return max(char.energy, 1)
+    return max(char['energy'], 1)
 
 # vim: ai et ts=4 sts=4 sw=4

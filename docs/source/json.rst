@@ -28,54 +28,72 @@ The *Lifewheel* format (referred at times in Madiolahb as "Character" or
 
    {
        // Madiolahb metadata
-       'owner': 'test@example.com',
-       'name': 'Name of this Life Wheel',
-       'active': true, // Currently involved in play
+       "owner": "test@example.com",
+       "name": "Name of this Life Wheel",
+       "active": true, // Currently involved in play
 
        // Source Values
-       'ego': 0,
-       'will': 0,
+       "ego": 0,
+       "will": 0,
 
        // "Drained" Spots // TODO: 11-10-24 Update these names
-       'ego_spot': 0,
-       'will_spot': 0,
-       'will_spent': 0,
+       "ego_spot": 0,
+       "will_spot": 0,
+       "will_spent": 0,
        
        // Elements of Ego
-       'life': 0,
-       'earth': 0,
-       'water': 0,
+       "life": 0,
+       "earth": 0,
+       "water": 0,
 
        // Elements of Will
-       'energy': 0,
-       'air': 0,
-       'fire': 0,
+       "energy": 0,
+       "air": 0,
+       "fire": 0,
 
-       // Professions
-       'job1': 0,
-       'job2': 0,
-       'job3': 0,
+       // Professions // TODO: Replace with Embellishments
+       "job1": 0,
+       "job2": 0,
+       "job3": 0,
 
        // Time Track
-       'time': 0,
-       'recovery': 0, // TODO: What does this mean, again?
+       "time": 0,
+       "recovery": 0, // TODO: What does this mean, again?
 
-       // Mundane Influences
-       'mastery': 0,
-       'persistence': 0,
-       'design': 0,
-       'poise': 0,
-       'sleight': 0,
-       'charm': 0,
+       // Influences
+       "mastery": 0,
+       "persistence": 0,
+       "design": 0,
+       "poise": 0,
+       "sleight": 0,
+       "charm": 0,
 
-       // Heroic Influences
-       'mind': 0,
-       'body': 0,
-       'spirit': 0,
+       // Domains
+       "mind": 0,
+       "body": 0,
+       "spirit": 0,
 
        // Position, Presumably Hex Map Coordinates
-       'x': 0,
-       'y': 0
+       "x": 0,
+       "y": 0
     }
+
+Game State
+==========
+
+A *Game* state is used for keeping track of multiple actions across
+potentially multiple Lifewheels.
+
+.. sourcecode:: js
+
+   {
+       // Madiolahb metadata
+       "title": "Example Game",
+       "players": ["list@example.com", "of@example.org",
+           "players@example.net"],
+       
+       // Previous states
+       "last_influence": "sleight", // Most influence performed
+   }
 
 .. vim: ai spell tw=72

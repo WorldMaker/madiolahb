@@ -1,17 +1,16 @@
 # HCE Bee
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
-from hce import check_action, GUARANTEED_ROLL, max_influence, max_recovery, \
-    ROLL_EFFECT
-from models import INFLUENCES
+from core import check_action, GUARANTEED_ROLL, INFLUENCES, max_influence,
+    max_recovery, ROLL_EFFECT
 import random
 
-def flow(self, subject=None, **kwargs):
-    if not self._char(subject): return False
-    if not self._active(): return False
-
+def exert(self, char, **kwargs):
+    """
+    Lifewheel will is exerted to perform actions.
+    """
     for inf in INFLUENCES:
         if inf in kwargs:
-            if self.char.will < kwargs[inf]:
+            if char['will'] < kwargs[inf]:
                 self.warnings.append('Not enough will to move %s to %s' % (
                     kwargs[inf], inf))
             else:
@@ -19,38 +18,32 @@ def flow(self, subject=None, **kwargs):
                 if kwargs[inf] > maxinf:
                     self.warnings.append('Over-exerted: %s > %s' % (
                         kwargs[inf], maxinf))
-                self.char.will -= kwargs[inf]
-                oldinfcount = getattr(self.char, inf)
-                setattr(self.char, inf, oldinfcount + kwargs[inf])
-                if self.char.key() not in self.updated:
-                    self.updated.append(self.char.key())
+                self.will -= kwargs[inf]
+                char[inf] = char[inf] + kwargs[inf]
 
-def act(self, subject=None, influence=None, heroic=None, profession=None,
+def act(self, char, influence=None, domain=False, profession=None,
         **kwargs):
-    if not self._char(subject): return False
-    if not self._active(): return False
-
-    self.game.lastinfluence = influence
-    cando, is_guaranteed = check_action(self.char, False, influence, heroic,
+    """
+    Performing an unopposed action
+    """
+    self.game['lastinfluence'] = influence
+    cando, is_guaranteed = check_action(char, False, influence, heroic,
         profession)
     if not cando:
         self.errors.append('%s does not have enough will exerted to perform.' %
-            self.char.name)
+            char['name'])
         return
     if is_guaranteed:
         self.game.lastroll = GUARANTEED_ROLL
     else:
         self.game.lastroll = random.randint(0, 9)
-    inf = getattr(self.char, influence)
-    maxinf = max_influence(self.char, influence)
+    inf = char['influence']
+    maxinf = max_influence(char, influence)
     if inf > maxinf:
         # Excess influence is "spent"
-        setattr(self.char, influence, maxinf)
-        self.char.will_spent += maxinf - inf
-        if self.char.key() not in self.updated:
-            self.updated.append(self.char.key())
+        self['influence'] = maxinf
+        self['will_spent'] += maxinf - inf
     self.game.cureffect, self.game.curtiming = ROLL_EFFECT[self.game.lastroll]
-    self.gameupdated = True
 
 def contest(self, subject=None, influence=None, heroic=None, profession=None,
         object=None, **kwargs):
