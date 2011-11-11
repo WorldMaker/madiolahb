@@ -37,7 +37,7 @@ The *Lifewheel* format (referred at times in Madiolahb as "Character" or
        "will": 0,
 
        // "Drained" Spots // TODO: 11-10-24 Update these names
-       "ego_spot": 0,
+       "ego_spilt": 0,
        "will_spot": 0,
        "will_spent": 0,
        
@@ -75,25 +75,15 @@ The *Lifewheel* format (referred at times in Madiolahb as "Character" or
 
        // Position, Presumably Hex Map Coordinates
        "x": 0,
-       "y": 0
+       "y": 0,
+
+       // Performance state tracking
+       "last_influence": "sleight",
+       "
+
+       // Process reporting
+       "errors": [],
+       "warnings": []
     }
-
-Game State
-==========
-
-A *Game* state is used for keeping track of multiple actions across
-potentially multiple Lifewheels.
-
-.. sourcecode:: js
-
-   {
-       // Madiolahb metadata
-       "title": "Example Game",
-       "players": ["list@example.com", "of@example.org",
-           "players@example.net"],
-       
-       // Previous states
-       "last_influence": "sleight", // Most influence performed
-   }
 
 .. vim: ai spell tw=72
