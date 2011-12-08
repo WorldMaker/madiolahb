@@ -5,7 +5,7 @@
 This is the main module for shared Madiolahb knowledge.
 """
 
-SPOTS = ('ego', 'will', 'ego_spot', 'will_spot', 'life', 'earth', 'water',
+SPOTS = ('ego', 'will', 'ego_spilt', 'will_spilt', 'life', 'earth', 'water',
     'energy', 'air', 'fire', 'will_spent')
 
 INFLUENCES = ('mastery', 'persistence', 'design', 'poise', 'sleight',
@@ -105,5 +105,15 @@ def check_action(char, contested, influence, heroic, profession):
 
 def max_recovery(char):
     return max(char['energy'], 1)
+
+def fill_character(char):
+    for spot in SPOTS + INFLUENCES:
+        if spot not in char:
+            char[spot] = 0
+    # TODO: Others?
+    if 'warnings' not in char:
+        char['warnings'] = []
+    if 'errors' not in char:
+        char['errors'] = []
 
 # vim: ai et ts=4 sts=4 sw=4

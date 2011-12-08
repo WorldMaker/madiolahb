@@ -1,6 +1,6 @@
 # HCE Bee
 # Copyright 2009 Max Battcher. Licensed for use under the Ms-RL. See LICENSE.
-from core import check_action, GUARANTEED_ROLL, INFLUENCES, max_influence,
+from core import check_action, GUARANTEED_ROLL, INFLUENCES, max_influence, \
     max_recovery, ROLL_EFFECT
 import random
 
@@ -20,6 +20,12 @@ def exert(char, **kwargs):
                         kwargs[inf], maxinf))
                 char['will'] -= kwargs[inf]
                 char[inf] = char[inf] + kwargs[inf]
+
+def _register_exert(subp):
+    parser = subp.add_parser('exert')
+    for inf in INFLUENCES:
+        parser.add_argument("--%s" % inf, type=int)
+    parser.set_defaults(func=exert)
 
 def act(char, influence=None, domain=False, profession=None, **kwargs):
     """
@@ -43,6 +49,13 @@ def act(char, influence=None, domain=False, profession=None, **kwargs):
         char['influence'] = maxinf
         char['will_spent'] += maxinf - inf
     self.game.cureffect, self.game.curtiming = ROLL_EFFECT[self.game.lastroll]
+
+def _register_act(subp):
+    parser = subp.add_parser('act')
+    parser.add_argument('influence')
+    parser.add_argument('--domain')
+    parser.add_argument('--profession')
+    parser.set_defaults(func=act)
 
 def contest(char, influence=None, heroic=None, profession=None,
         object=None, **kwargs):
@@ -71,11 +84,19 @@ def contest(char, influence=None, heroic=None, profession=None,
     self.game.cureffect, self.game.curtiming = ROLL_EFFECT[self.game.lastroll]
     self.gameupdated = True
 
+def _register_contest(subp):
+    parser = subp.add_parser('contest')
+    parser.add_argument('influence')
+    parser.add_argument('--domain')
+    parser.add_argument('--profession')
+    parser.add_argument('--object')
+    parser.set_defaults(func=contest)
+
 def lose(char, count=0, **kwargs):
     """
     Sometimes lifewheels lose ego when performances are unfavorable.
     """
-    tokens = min(self.char.ego, count)
+    tokens = min(char['ego'], count)
     char['ego'] -= tokens
     char['ego_spilt'] += tokens
     if tokens < count:
@@ -85,6 +106,11 @@ def lose(char, count=0, **kwargs):
         char['ego'] = 0
         char['active'] = False
         char['warnings'].append('%s has passed out.' % char['name'])
+
+def _register_lose(subp):
+    parser = subp.add_parser('lose')
+    parser.add_argument('count', type=int)
+    parser.set_defaults(func=lose)
 
 def recover(char, count=None, what=None, **kwargs):
     """
@@ -112,5 +138,18 @@ def recover(char, count=None, what=None, **kwargs):
         tokens = min(char['will_spent'], count)
         char['will_spent'] -= tokens
         char['will'] += tokens
+
+def _register_recover(subp):
+    parser = subp.add_parser('recover')
+    parser.add_argument('--count', type=int, default=None)
+    parser.add_argument('--what', choices=('ego', 'will'), default=None)
+    parser.set_defaults(func=recover)
+
+def register_commands(subp):
+    _register_exert(subp)
+    _register_act(subp)
+    _register_contest(subp)
+    _register_lose(subp)
+    _register_recover(subp)
 
 # vim: ai et ts=4 sts=4 sw=4
